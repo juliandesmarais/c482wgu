@@ -10,6 +10,7 @@ public class AlertUtility {
 
     public static Optional<ButtonType> displayAlert(AlertType type, String title, String header, String content) {
         Alert alert = new Alert(type);
+        alert.setWidth(250);
 
         if (title != null) {
             alert.setTitle(title);
@@ -18,6 +19,7 @@ public class AlertUtility {
             alert.setHeaderText(header);
         }
         if (content != null) {
+            content = content.replace("[", "").replace("]", "").replace(",", "\n");
             alert.setContentText(content);
         }
 

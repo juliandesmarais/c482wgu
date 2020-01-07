@@ -28,7 +28,7 @@ public class LaunchViewUtility {
         stage.show();
     }
 
-    public void launchModifyProductView(ActionEvent event, Product product) throws IOException {
+    public void launchProductView(ActionEvent event, Product product) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../view/ProductScreen.fxml"));
         Parent parent = loader.load();
@@ -56,11 +56,6 @@ public class LaunchViewUtility {
                 sceneWidth = Constants.PART_SCREEN_WIDTH;
                 sceneHeight = Constants.PART_SCREEN_HEIGHT;
                 break;
-            case ADD_PRODUCT:
-                resourcePath += "ProductScreen.fxml";
-                sceneWidth = Constants.PRODUCT_SCREEN_WIDTH;
-                sceneHeight = Constants.PRODUCT_SCREEN_HEIGHT;
-                break;
         }
 
         Parent parent = FXMLLoader.load(getClass().getResource(resourcePath));
@@ -71,6 +66,6 @@ public class LaunchViewUtility {
     }
 
     public enum InventoryManagerView {
-        MAIN, ADD_PART, ADD_PRODUCT
+        MAIN, ADD_PART
     }
 }

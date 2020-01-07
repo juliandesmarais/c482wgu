@@ -3,6 +3,7 @@ package controller;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,10 +15,12 @@ import support.AlertUtility;
 import support.GetFieldValueUtility;
 import support.InventoryManager;
 import support.LaunchViewUtility;
+import support.LaunchViewUtility.InventoryManagerView;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ProductScreenController implements Initializable {
@@ -61,54 +64,104 @@ public class ProductScreenController implements Initializable {
     private TableColumn<Part, Double> associatedPartsTablePriceCol;
 
     private ArrayList<String> invalidFields;
-    private Product currentProduct;
+    private ObservableList<Part> currentAvailableParts;
+    private ObservableList<Part> currentAssociatedParts;
+
+    private Product getProductDetails() {
+        invalidFields = new ArrayList<>();
+
+        Integer idValue = getId();
+        String nameValue = getName();
+        Double priceValue = getPrice();
+        Integer invValue = getInv();
+        Integer minValue = getMin();
+        Integer maxValue = getMax();
+
+        if (idValue == null) {
+            idValue = InventoryManager.shared().getLastProductId();
+        }
+
+        if (nameValue == null) {
+            invalidFields.add("Name was not properly filled.");
+        }
+
+        if (priceValue == null) {
+            invalidFields.add("Price was not properly filled (only digits/decimals are allowed).");
+        }
+
+        if (invValue == null) {
+            invalidFields.add("Stock/inventory was not properly filled (only digits are allowed).");
+        }
+
+        if (minValue == null) {
+            invalidFields.add("Minimum was not properly filled (only digits are allowed).");
+        }
+
+        if (maxValue == null) {
+            invalidFields.add("Maximum was not properly filled (only digits are allowed).");
+        }
+
+        if (currentAssociatedParts == null || currentAssociatedParts.isEmpty()) {
+            invalidFields.add("At least one part must be associated with the product.");
+        }
+
+        if (!invalidFields.isEmpty()) {
+            return null;
+        }
+
+        Product productToSave = new Product(idValue, nameValue, priceValue, invValue, minValue, maxValue);
+        productToSave.setAssociatedParts(currentAssociatedParts);
+        return productToSave;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         idField.setDisable(true);
-        setAvailablePartsTableColumns();
-        setAssociatedPartsTableColumns();
-
-        updateTables();
+        setAvailablePartsTable();
+        setAssociatedPartsTable();
     }
 
-    public void setProduct(Product product) {
-        currentProduct = product;
-
-        titleLabel.setText("Modify Product");
-        idField.setText(String.valueOf(product.getId()));
-        nameField.setText(product.getName());
-        invField.setText(String.valueOf(product.getStock()));
-        priceCostField.setText(String.valueOf(product.getPrice()));
-        maxField.setText(String.valueOf(product.getMax()));
-        minField.setText(String.valueOf(product.getMin()));
-
-        updateTables();
-    }
-
-    private void setAvailablePartsTableColumns() {
+    private void setAvailablePartsTable() {
         availablePartsTablePartIdCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
         availablePartsTableNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
         availablePartsTableInvLevelCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStock()).asObject());
         availablePartsTablePriceCol.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getPrice()).asObject());
+
+        currentAvailableParts = FXCollections.observableArrayList();
+        currentAvailableParts.setAll(InventoryManager.shared().getAllParts());
+        availablePartsTable.setItems(currentAvailableParts);
     }
 
-    private void setAssociatedPartsTableColumns() {
+    private void setAssociatedPartsTable() {
         associatedPartsTablePartIdCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
         associatedPartsTableNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
         associatedPartsTableInvLevelCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStock()).asObject());
         associatedPartsTablePriceCol.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getPrice()).asObject());
+
+        currentAssociatedParts = FXCollections.observableArrayList();
+        associatedPartsTable.setItems(currentAssociatedParts);
     }
 
-    private void updateTables() {
-        if (currentProduct == null) {
-            availablePartsTable.setItems(InventoryManager.shared().getAllParts());
-        } else {
-            ObservableList<Part> associatedParts = currentProduct.getAllAssociatedParts();
-            ObservableList<Part> remainingAvailableParts = InventoryManager.shared().getAllParts().filtered(part -> !associatedParts.contains(part));
-            availablePartsTable.setItems(remainingAvailableParts);
-            associatedPartsTable.setItems(associatedParts);
+    public void setProduct(Product product) {
+        if (product != null) {
+            titleLabel.setText("Modify Product");
+            idField.setText(String.valueOf(product.getId()));
+            nameField.setText(product.getName());
+            invField.setText(String.valueOf(product.getStock()));
+            priceCostField.setText(String.valueOf(product.getPrice()));
+            maxField.setText(String.valueOf(product.getMax()));
+            minField.setText(String.valueOf(product.getMin()));
+
+            if (product.getAssociatedParts() != null && !product.getAssociatedParts().isEmpty()) {
+                currentAssociatedParts.setAll(product.getAssociatedParts());
+                currentAvailableParts.setAll(InventoryManager.shared().getAllParts().filtered(part -> !currentAssociatedParts.contains(part)));
+            }
         }
+    }
+
+    private void refreshTables() {
+        associatedPartsTable.refresh();
+        availablePartsTable.refresh();
     }
 
     private Integer getId() {
@@ -135,109 +188,80 @@ public class ProductScreenController implements Initializable {
         return GetFieldValueUtility.getIntValue(maxField);
     }
 
-    private ObservableList<Part> getAssociatedParts() {
-        return associatedPartsTable.getSelectionModel().getSelectedItems();
-    }
-
-    private Product getProductDetails() {
-        invalidFields = new ArrayList<>();
-        Integer idValue = getId();
-        String nameValue = getName();
-        Double priceValue = getPrice();
-        Integer invValue = getInv();
-        Integer minValue = getMin();
-        Integer maxValue = getMax();
-        ObservableList<Part> associatedParts = getAssociatedParts();
-
-        if (idValue == null) {
-            idValue = InventoryManager.shared().getLastProductId();
-        }
-
-        if (nameValue == null) {
-            invalidFields.add("Name was not properly filled.");
-        }
-
-        if (priceValue == null) {
-            invalidFields.add("Price was not properly filled (only digits/decimals are allowed).");
-        }
-
-        if (invValue == null) {
-            invalidFields.add("Stock/inventory was not properly filled (only digits are allowed).");
-        }
-
-        if (minValue == null) {
-            invalidFields.add("Minimum was not properly filled (only digits are allowed).");
-        }
-
-        if (maxValue == null) {
-            invalidFields.add("Maximum was not properly filled (only digits are allowed).");
-        }
-
-        if (associatedParts.isEmpty()) {
-            invalidFields.add("Product must be associated with at least one part.");
-        }
-
-        if (!invalidFields.isEmpty()) {
-            return null;
-        }
-
-        return new Product(idValue, nameValue, priceValue, invValue, minValue, maxValue);
-    }
-
     @FXML
-    private void handleAvailablePartsSearch(ActionEvent event) throws IOException {
+    private void handleAvailablePartsSearch() {
         String searchTerm = availablePartsSearchField.getText();
-        availablePartsTable.setItems(InventoryManager.shared().lookupPart(searchTerm).filtered(part -> !getAssociatedParts().contains(part)));
+        availablePartsTable.setItems(currentAvailableParts.filtered(part -> part.getName().contains(searchTerm)));
     }
 
     @FXML
-    private void clearAvailablePartSearchField(ActionEvent event) throws IOException {
-        
+    private void clearAvailablePartSearchField() {
+        availablePartsSearchField.clear();
+        availablePartsTable.setItems(currentAvailableParts);
+        refreshTables();
     }
 
     @FXML
     private void handleAddPartToProduct() {
-        if (currentProduct == null) {
-            currentProduct = new Product();
+        Part selectedPart = availablePartsTable.getSelectionModel().getSelectedItem();
+        if (selectedPart != null) {
+            currentAvailableParts.remove(selectedPart);
+            currentAssociatedParts.add(selectedPart);
+            refreshTables();
         }
-
-        for (Part selectedPart : availablePartsTable.getSelectionModel().getSelectedItems()) {
-            currentProduct.addAssociatedPart(selectedPart);
-        }
-
-        updateTables();
     }
 
     @FXML
     private void handleDeletePartFromProduct() {
-        currentProduct.deleteAssociatedPart(associatedPartsTable.getSelectionModel().getSelectedItem());
-        updateTables();
+        Part selectedPart = associatedPartsTable.getSelectionModel().getSelectedItem();
+        if (selectedPart != null) {
+            Optional<ButtonType> result = AlertUtility.displayAlert(Alert.AlertType.CONFIRMATION,
+                    null,
+                    "Remove Associated Part",
+                    "Are you sure you want to remove the associated part from the product?");
+
+            if (result.get() == ButtonType.OK) {
+                currentAssociatedParts.remove(selectedPart);
+                currentAvailableParts.add(selectedPart);
+                refreshTables();
+            }
+        }
+    }
+
+    private void displayFieldErrorAlert() {
+        AlertUtility.displayAlert(Alert.AlertType.ERROR,
+                "Error", "One or more field(s) were not filled properly:",
+                invalidFields.toString());
+        return;
     }
 
     @FXML
     private void handleSave(ActionEvent event) throws IOException {
-        currentProduct = getProductDetails();
-
-        if (currentProduct != null) {
-            Part productInInventory = InventoryManager.shared().lookupPart(currentProduct.getId());
-
+        Product productToSave = getProductDetails();
+        if (productToSave != null) {
+            Product productInInventory = InventoryManager.shared().lookupProduct(productToSave.getId());
             if (productInInventory == null) { // Add Product
-                InventoryManager.shared().addProduct(currentProduct);
-            } else { // Edit Product
+                InventoryManager.shared().addProduct(productToSave);
+            } else { // Modify Product
                 Integer index = InventoryManager.shared().getAllProducts().indexOf(productInInventory);
-                InventoryManager.shared().updateProduct(index, currentProduct);
+                InventoryManager.shared().updateProduct(index, productToSave);
             }
 
             new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);
         } else {
-            AlertUtility.displayAlert(Alert.AlertType.ERROR,
-                    "Error", "One or more field(s) were not filled properly:",
-                    invalidFields.toString());
+            displayFieldErrorAlert();
         }
     }
 
     @FXML
     private void handleCancel(ActionEvent event) throws IOException {
-        new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);
+        Optional<ButtonType> result = AlertUtility.displayAlert(Alert.AlertType.CONFIRMATION,
+                null,
+                "Cancel",
+                "Are you sure you want to cancel? All progress will be lost.");
+
+        if (result.get() == ButtonType.OK) {
+            new LaunchViewUtility().launchView(InventoryManagerView.MAIN, event);
+        }
     }
 }

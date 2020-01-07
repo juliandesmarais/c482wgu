@@ -13,6 +13,7 @@ public class Product {
     private int max;
 
     public Product() {
+        associatedParts = FXCollections.observableArrayList();
     }
 
     public Product(int id, String name, double price, int stock, int min, int max) {
@@ -24,23 +25,24 @@ public class Product {
         this.max = max;
     }
 
-    public ObservableList<Part> getAllAssociatedParts() {
+    public ObservableList<Part> getAssociatedParts() {
         return associatedParts;
     }
 
+    public void setAssociatedParts(ObservableList<Part> associatedParts) {
+        this.associatedParts = associatedParts;
+    }
+
     public void addAssociatedPart(Part associatedPart) {
-        if (associatedParts == null) {
-            associatedParts = FXCollections.observableArrayList();
-        }
         associatedParts.add(associatedPart);
     }
 
-    public boolean deleteAssociatedPart(Part selectedAspart) {
-        if (!associatedParts.contains(selectedAspart)) {
+    public boolean deleteAssociatedPart(Part associatedPart) {
+        if (!associatedParts.contains(associatedPart)) {
             return false;
         }
 
-        associatedParts.remove(selectedAspart);
+        associatedParts.remove(associatedPart);
         return true;
     }
 
@@ -92,30 +94,3 @@ public class Product {
         this.max = max;
     }
 }
-
-
-//Product
-//- associatedParts:ObservableList<Part>
-// - id : int
-//- name : String
-//- price : double
-//- stock : int
-// - min : int
-//- max : int
-//+ Product(id : int, name : String, price : double, stock : int, min : int, max : int)
-//+ setId(id:int):void
-//+ setName(name:String):void
-//+ setPrice(price:double):void
-//+ setStock(stock:int):void
-//+ setMin(min:int):void
-//+ setMax(max:int):void
-//+ setPrice(max:int):void
-//+ getId():int
-//+ getName():String
-//+ getPrice():double
-//+ getStock():int
-//+ getMin():int
-//+ getMax():int
-//+ addAssociatedPart(part:Part):void
-//+ deleteAssociatedPart(selectedAspart:Part):boolean
-//+ getAllAssociatedParts():ObservableList<Part>

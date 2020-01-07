@@ -16,7 +16,7 @@ public class Inventory {
     }
 
     public Part lookupPart(int partId) {
-        for (Part part: allParts) {
+        for (Part part : allParts) {
             if (part.getId() == partId) {
                 return part;
             }
@@ -26,7 +26,7 @@ public class Inventory {
     }
 
     public Product lookupProduct(int productId) {
-        for (Product product: allProducts) {
+        for (Product product : allProducts) {
             if (product.getId() == productId) {
                 return product;
             }
@@ -38,7 +38,7 @@ public class Inventory {
     public ObservableList<Part> lookupPart(String partName) {
         ObservableList<Part> matchingParts = FXCollections.observableArrayList();
 
-        for (Part part: allParts) {
+        for (Part part : allParts) {
             if (part.getName().toLowerCase().contains(partName.toLowerCase())) {
                 matchingParts.add(part);
             }
@@ -50,7 +50,7 @@ public class Inventory {
     public ObservableList<Product> lookupProduct(String productName) {
         ObservableList<Product> matchingProducts = FXCollections.observableArrayList();
 
-        for (Product product: allProducts) {
+        for (Product product : allProducts) {
             if (product.getName().toLowerCase().contains(productName.toLowerCase())) {
                 matchingProducts.add(product);
             }
@@ -101,4 +101,20 @@ public class Inventory {
         return getAllProducts().size();
     }
 
+    // attributes
+//    - allParts:ObservableList<Part>
+//- allProducts:ObservableList<Product>
+
+//    + addPart(newPart:Part):void
+//+ addProduct(newProduct:Product):void
+//+ lookupPart(partId:int):Part
+//+ lookupProduct(productId:int):Product
+//+ lookupPart(partName:String):ObservableList<Part>
+//+ lookupProduct(productName:String):ObservableList<Product>
+//+ updatePart(index:int, selectedPart:Part):void
+//+ updateProduct(index:int, newProduct:Product):void
+//+ deletePart(selectedPart:Part):boolean
+//+ deleteProduct(selectedProduct:Product):boolean
+//+ getAllParts():ObservableList<Part>
+//+ getAllProducts():ObservableList<Product>
 }

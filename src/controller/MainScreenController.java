@@ -75,13 +75,23 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void launchModifyPartView(ActionEvent event) throws IOException {
-        new LaunchViewUtility().launchModifyPartView(event, getSelectedPartById());
+        if (partsTable.getSelectionModel().getSelectedItem() != null) {
+            new LaunchViewUtility().launchModifyPartView(event, getSelectedPartById());
+        }
     }
 
     @FXML
     private void handlePartsDelete() {
-        if (InventoryManager.shared().deletePart(getSelectedPartById())) {
-            updatePartsTable();
+        if (partsTable.getSelectionModel().getSelectedItem() != null) {
+            Optional<ButtonType> result = AlertUtility.displayAlert(Alert.AlertType.CONFIRMATION,
+                    null,
+                    "Delete Part",
+                    "Are you sure you want to delete the selected part?");
+            if (result.get() == ButtonType.OK) {
+                if (InventoryManager.shared().deletePart(getSelectedPartById())) {
+                    updatePartsTable();
+                }
+            }
         }
     }
 
@@ -99,18 +109,28 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void launchAddProductView(ActionEvent event) throws IOException {
-        new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.ADD_PRODUCT, event);
+        new LaunchViewUtility().launchProductView(event, null);
     }
 
     @FXML
     private void launchModifyProductView(ActionEvent event) throws IOException {
-        new LaunchViewUtility().launchModifyProductView(event, getSelectedProductById());
+        if (productsTable.getSelectionModel().getSelectedItem() != null) {
+            new LaunchViewUtility().launchProductView(event, getSelectedProductById());
+        }
     }
 
     @FXML
     private void handleProductsDelete() {
-        if (InventoryManager.shared().deleteProduct(getSelectedProductById())) {
-            updateProductsTable();
+        if (productsTable.getSelectionModel().getSelectedItem() != null) {
+            Optional<ButtonType> result = AlertUtility.displayAlert(Alert.AlertType.CONFIRMATION,
+                    null,
+                    "Delete Product",
+                    "Are you sure you want to delete the selected product?");
+            if (result.get() == ButtonType.OK) {
+                if (InventoryManager.shared().deleteProduct(getSelectedProductById())) {
+                    updateProductsTable();
+                }
+            }
         }
     }
 
@@ -121,12 +141,12 @@ public class MainScreenController implements Initializable {
                 "Exit",
                 "Are you sure you want to exit?");
 
-        if (result.get() == ButtonType.OK){
+        if (result.get() == ButtonType.OK) {
             System.exit(0);
         }
     }
 
-    private void setPartsTableColumns()  {
+    private void setPartsTableColumns() {
         partsTablePartIdCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
         partsTableNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
         partsTableInvLevelCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStock()).asObject());

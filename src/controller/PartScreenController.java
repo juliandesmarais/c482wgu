@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PartScreenController implements Initializable {
@@ -107,7 +108,7 @@ public class PartScreenController implements Initializable {
         return GetFieldValueUtility.getStringValue(machineIdOrCompanyNameField);
     }
 
-    private Part getPartDetails() {
+    private Part getDisplayedPartDetails() {
         invalidFields = new ArrayList<>();
         Integer idValue = getId();
         String nameValue = getName();
@@ -183,7 +184,7 @@ public class PartScreenController implements Initializable {
     }
 
     @FXML
-    private void setInHouse(ActionEvent event) throws IOException {
+    private void setInHouse() {
         setInHouseState();
     }
 
@@ -194,28 +195,38 @@ public class PartScreenController implements Initializable {
 
     @FXML
     private void handleSave(ActionEvent event) throws IOException {
-        Part currentPart = getPartDetails();
+        Part displayedPart = getDisplayedPartDetails();
 
-        if (currentPart != null) {
-            Part partInInventory = InventoryManager.shared().lookupPart(currentPart.getId());
-
-            if (partInInventory == null) { // Add Part
-                InventoryManager.shared().addPart(currentPart);
-            } else { // Edit Part
-                Integer index = InventoryManager.shared().getAllParts().indexOf(partInInventory);
-                InventoryManager.shared().updatePart(index, currentPart);
-            }
-
-            new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);
-        } else {
+        if (!invalidFields.isEmpty()) {
             AlertUtility.displayAlert(Alert.AlertType.ERROR,
                     "Error", "One or more field(s) were not filled properly:",
                     invalidFields.toString());
+            return;
+        }
+
+        if (displayedPart != null) {
+            Part partInInventory = InventoryManager.shared().lookupPart(displayedPart.getId());
+
+            if (partInInventory == null) { // Add Part
+                InventoryManager.shared().addPart(displayedPart);
+            } else { // Edit Part
+                Integer index = InventoryManager.shared().getAllParts().indexOf(partInInventory);
+                InventoryManager.shared().updatePart(index, displayedPart);
+            }
+
+            new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);
         }
     }
 
     @FXML
     private void handleCancel(ActionEvent event) throws IOException {
-        new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);
+        Optional<ButtonType> result = AlertUtility.displayAlert(Alert.AlertType.CONFIRMATION,
+                null,
+                "Cancel",
+                "Are you sure you want to cancel? All progress will be lost.");
+
+        if (result.get() == ButtonType.OK) {
+            new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);
+        }
     }
 }

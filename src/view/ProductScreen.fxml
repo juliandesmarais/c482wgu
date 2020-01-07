@@ -22,7 +22,7 @@
 
             <Label GridPane.columnIndex="0" GridPane.rowIndex="1" text="Name" style="-fx-font-size: 14;"/>
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="nameField" prefHeight="40.0"
-                       prefWidth="175.0" promptText="Part Name"/>
+                       prefWidth="175.0" promptText="Product Name"/>
 
             <Label GridPane.columnIndex="0" GridPane.rowIndex="2" text="Inv" style="-fx-font-size: 14;"/>
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="invField" prefHeight="40.0"

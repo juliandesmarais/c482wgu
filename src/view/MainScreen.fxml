@@ -41,12 +41,19 @@
                     </Button>
 
                     <!--                    Search Field-->
-                    <AnchorPane prefHeight="24.0" prefWidth="175.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                    <AnchorPane prefHeight="24.0" prefWidth="175.0" AnchorPane.rightAnchor="15.0"
+                                AnchorPane.topAnchor="15.0">
                         <children>
-                            <TextField fx:id="partsSearchField" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            <Button onAction="#clearPartSearchField" graphicTextGap="0.0" minHeight="10.0" minWidth="13.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="22.0" style="-fx-background-color: #7085FF;&#10;-fx-background-radius: 30;&#10;-fx-background-insets: 0;" text="X" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+                            <TextField fx:id="partsSearchField" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
+                                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                       AnchorPane.topAnchor="0.0"/>
+                            <Button onAction="#clearPartSearchField" graphicTextGap="0.0" minHeight="10.0"
+                                    minWidth="13.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="22.0"
+                                    style="-fx-background-color: #7085FF;&#10;-fx-background-radius: 30;&#10;-fx-background-insets: 0;"
+                                    text="X" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0"
+                                    AnchorPane.topAnchor="4.0">
                                 <font>
-                                    <Font size="9.0" />
+                                    <Font size="9.0"/>
                                 </font>
                             </Button>
                         </children>
@@ -113,12 +120,19 @@
                     </Button>
 
                     <!--                    Search Field-->
-                    <AnchorPane prefHeight="24.0" prefWidth="175.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                    <AnchorPane prefHeight="24.0" prefWidth="175.0" AnchorPane.rightAnchor="15.0"
+                                AnchorPane.topAnchor="15.0">
                         <children>
-                            <TextField fx:id="productsSearchField" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            <Button onAction="#clearProductSearchField" graphicTextGap="0.0" minHeight="10.0" minWidth="13.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="22.0" style="-fx-background-color: #7085FF;-fx-background-radius: 30;-fx-background-insets: 0;" text="X" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+                            <TextField fx:id="productsSearchField" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
+                                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                       AnchorPane.topAnchor="0.0"/>
+                            <Button onAction="#clearProductSearchField" graphicTextGap="0.0" minHeight="10.0"
+                                    minWidth="13.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="22.0"
+                                    style="-fx-background-color: #7085FF;-fx-background-radius: 30;-fx-background-insets: 0;"
+                                    text="X" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0"
+                                    AnchorPane.topAnchor="4.0">
                                 <font>
-                                    <Font size="9.0" />
+                                    <Font size="9.0"/>
                                 </font>
                             </Button>
                         </children>
@@ -130,7 +144,7 @@
                     >
                         <columns>
                             <TableColumn fx:id="productsTablePartIdCol" prefWidth="130.0" text="Part ID"/>
-                            <TableColumn fx:id="productsTableNameCol" prefWidth="130.0" text="Part Name"/>
+                            <TableColumn fx:id="productsTableNameCol" prefWidth="130.0" text="Product Name"/>
                             <TableColumn fx:id="productsTableInvLevelCol" prefWidth="130.0" text="Inventory Level"/>
                             <TableColumn fx:id="productsTablePriceCol" prefWidth="130.0" text="Price Per Unit"/>
                         </columns>
