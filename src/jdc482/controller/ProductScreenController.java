@@ -78,7 +78,7 @@ public class ProductScreenController implements Initializable {
         Integer maxValue = getMax();
 
         if (idValue == null) {
-            idValue = InventoryManager.shared().getLastProductId();
+            idValue = InventoryManager.getInstance().getLastProductId();
         }
 
         if (nameValue == null) {
@@ -128,7 +128,7 @@ public class ProductScreenController implements Initializable {
         availablePartsTablePriceCol.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getPrice()).asObject());
 
         currentAvailableParts = FXCollections.observableArrayList();
-        currentAvailableParts.setAll(InventoryManager.shared().getAllParts());
+        currentAvailableParts.setAll(InventoryManager.getInstance().getAllParts());
         availablePartsTable.setItems(currentAvailableParts);
     }
 
@@ -154,7 +154,7 @@ public class ProductScreenController implements Initializable {
 
             if (product.getAssociatedParts() != null && !product.getAssociatedParts().isEmpty()) {
                 currentAssociatedParts.setAll(product.getAssociatedParts());
-                currentAvailableParts.setAll(InventoryManager.shared().getAllParts().filtered(part -> !currentAssociatedParts.contains(part)));
+                currentAvailableParts.setAll(InventoryManager.getInstance().getAllParts().filtered(part -> !currentAssociatedParts.contains(part)));
             }
         }
     }
@@ -239,12 +239,12 @@ public class ProductScreenController implements Initializable {
     private void handleSave(ActionEvent event) throws IOException {
         Product productToSave = getProductDetails();
         if (productToSave != null) {
-            Product productInInventory = InventoryManager.shared().lookupProduct(productToSave.getId());
+            Product productInInventory = InventoryManager.getInstance().lookupProduct(productToSave.getId());
             if (productInInventory == null) { // Add Product
-                InventoryManager.shared().addProduct(productToSave);
+                InventoryManager.getInstance().addProduct(productToSave);
             } else { // Modify Product
-                Integer index = InventoryManager.shared().getAllProducts().indexOf(productInInventory);
-                InventoryManager.shared().updateProduct(index, productToSave);
+                Integer index = InventoryManager.getInstance().getAllProducts().indexOf(productInInventory);
+                InventoryManager.getInstance().updateProduct(index, productToSave);
             }
 
             new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);

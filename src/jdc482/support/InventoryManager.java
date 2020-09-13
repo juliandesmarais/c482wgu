@@ -7,7 +7,7 @@ public class InventoryManager {
 
     private InventoryManager(){}
 
-    public static Inventory shared(){
+    public static Inventory getInstance(){
         return instance;
     }
 }

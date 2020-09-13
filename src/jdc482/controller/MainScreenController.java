@@ -59,7 +59,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private void handlePartsSearch() {
         String searchTerm = partsSearchField.getText();
-        partsTable.setItems(InventoryManager.shared().lookupPart(searchTerm));
+        partsTable.setItems(InventoryManager.getInstance().lookupPart(searchTerm));
     }
 
     @FXML
@@ -88,7 +88,7 @@ public class MainScreenController implements Initializable {
                     "Delete Part",
                     "Are you sure you want to delete the selected part?");
             if (result.get() == ButtonType.OK) {
-                if (InventoryManager.shared().deletePart(getSelectedPartById())) {
+                if (InventoryManager.getInstance().deletePart(getSelectedPartById())) {
                     updatePartsTable();
                 }
             }
@@ -98,7 +98,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private void handleProductsSearch() {
         String searchTerm = productsSearchField.getText();
-        productsTable.setItems(InventoryManager.shared().lookupProduct(searchTerm));
+        productsTable.setItems(InventoryManager.getInstance().lookupProduct(searchTerm));
     }
 
     @FXML
@@ -127,7 +127,7 @@ public class MainScreenController implements Initializable {
                     "Delete Product",
                     "Are you sure you want to delete the selected product?");
             if (result.get() == ButtonType.OK) {
-                if (InventoryManager.shared().deleteProduct(getSelectedProductById())) {
+                if (InventoryManager.getInstance().deleteProduct(getSelectedProductById())) {
                     updateProductsTable();
                 }
             }
@@ -161,18 +161,18 @@ public class MainScreenController implements Initializable {
     }
 
     private void updatePartsTable() {
-        partsTable.setItems(InventoryManager.shared().getAllParts());
+        partsTable.setItems(InventoryManager.getInstance().getAllParts());
     }
 
     private void updateProductsTable() {
-        productsTable.setItems(InventoryManager.shared().getAllProducts());
+        productsTable.setItems(InventoryManager.getInstance().getAllProducts());
     }
 
     private Part getSelectedPartById() {
-        return InventoryManager.shared().lookupPart(partsTable.getSelectionModel().getSelectedItem().getId());
+        return InventoryManager.getInstance().lookupPart(partsTable.getSelectionModel().getSelectedItem().getId());
     }
 
     private Product getSelectedProductById() {
-        return InventoryManager.shared().lookupProduct(productsTable.getSelectionModel().getSelectedItem().getId());
+        return InventoryManager.getInstance().lookupProduct(productsTable.getSelectionModel().getSelectedItem().getId());
     }
 }

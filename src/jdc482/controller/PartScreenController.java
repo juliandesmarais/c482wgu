@@ -118,7 +118,7 @@ public class PartScreenController implements Initializable {
         Integer maxValue = getMax();
 
         if (idValue == null) {
-            idValue = InventoryManager.shared().getLastPartId();
+            idValue = InventoryManager.getInstance().getLastPartId();
         }
 
         if (nameValue == null) {
@@ -205,13 +205,13 @@ public class PartScreenController implements Initializable {
         }
 
         if (displayedPart != null) {
-            Part partInInventory = InventoryManager.shared().lookupPart(displayedPart.getId());
+            Part partInInventory = InventoryManager.getInstance().lookupPart(displayedPart.getId());
 
             if (partInInventory == null) { // Add Part
-                InventoryManager.shared().addPart(displayedPart);
+                InventoryManager.getInstance().addPart(displayedPart);
             } else { // Edit Part
-                Integer index = InventoryManager.shared().getAllParts().indexOf(partInInventory);
-                InventoryManager.shared().updatePart(index, displayedPart);
+                Integer index = InventoryManager.getInstance().getAllParts().indexOf(partInInventory);
+                InventoryManager.getInstance().updatePart(index, displayedPart);
             }
 
             new LaunchViewUtility().launchView(LaunchViewUtility.InventoryManagerView.MAIN, event);
