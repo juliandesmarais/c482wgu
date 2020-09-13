@@ -1,6 +1,6 @@
-package support;
+package jdc482.support;
 
-import model.Inventory;
+import jdc482.model.Inventory;
 
 public class InventoryManager {
     private static final Inventory instance = new Inventory();

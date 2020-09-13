@@ -1,4 +1,4 @@
-package support;
+package jdc482.support;
 
 public class Constants {
     public static final double MAIN_SCREEN_WIDTH = 1250;

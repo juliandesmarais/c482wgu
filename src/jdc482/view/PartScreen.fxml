@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
-            fx:controller="controller.PartScreenController" style="-fx-background-color: lightgrey">
+            fx:controller="jdc482.controller.PartScreenController" style="-fx-background-color: lightgrey">
     <children>
 
         <Label fx:id="titleLabel" alignment="BASELINE_LEFT" text="Add Part"

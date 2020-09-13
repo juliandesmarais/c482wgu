@@ -1,16 +1,16 @@
-package controller;
+package jdc482.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import model.InHouse;
-import model.Outsourced;
-import model.Part;
-import support.AlertUtility;
-import support.GetFieldValueUtility;
-import support.InventoryManager;
-import support.LaunchViewUtility;
+import jdc482.model.InHouse;
+import jdc482.model.Outsourced;
+import jdc482.model.Part;
+import jdc482.support.AlertUtility;
+import jdc482.support.GetFieldValueUtility;
+import jdc482.support.InventoryManager;
+import jdc482.support.LaunchViewUtility;
 
 import java.io.IOException;
 import java.net.URL;

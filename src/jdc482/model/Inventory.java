@@ -1,4 +1,4 @@
-package model;
+package jdc482.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

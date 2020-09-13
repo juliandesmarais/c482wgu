@@ -1,4 +1,4 @@
-package model;
+package jdc482.model;
 
 public abstract class Part {
     private int id;

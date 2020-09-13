@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
-            fx:controller="controller.MainScreenController" style="-fx-background-color: lightgrey">
+            fx:controller="jdc482.controller.MainScreenController" style="-fx-background-color: lightgrey">
     <children>
 
         <Label alignment="BASELINE_LEFT" text="Inventory Management System"

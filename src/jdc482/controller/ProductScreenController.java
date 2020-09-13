@@ -1,4 +1,4 @@
-package controller;
+package jdc482.controller;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -9,13 +9,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import model.Part;
-import model.Product;
-import support.AlertUtility;
-import support.GetFieldValueUtility;
-import support.InventoryManager;
-import support.LaunchViewUtility;
-import support.LaunchViewUtility.InventoryManagerView;
+import jdc482.model.Part;
+import jdc482.model.Product;
+import jdc482.support.AlertUtility;
+import jdc482.support.GetFieldValueUtility;
+import jdc482.support.InventoryManager;
+import jdc482.support.LaunchViewUtility;
+import jdc482.support.LaunchViewUtility.InventoryManagerView;
 
 import java.io.IOException;
 import java.net.URL;

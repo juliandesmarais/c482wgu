@@ -1,15 +1,15 @@
-package support;
+package jdc482.support;
 
-import controller.PartScreenController;
-import controller.ProductScreenController;
+import jdc482.controller.PartScreenController;
+import jdc482.controller.ProductScreenController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Part;
-import model.Product;
+import jdc482.model.Part;
+import jdc482.model.Product;
 
 import java.io.IOException;
 

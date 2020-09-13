@@ -1,4 +1,4 @@
-package model;
+package jdc482.model;
 
 public class InHouse extends Part {
     private int machineId;
