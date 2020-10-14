@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane minHeight="675" minWidth="1150" styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.CustomerViewController">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+
+    <top>
+        <Label fx:id="customerViewTitleLabel" text="Add New Customer">
+            <font>
+                <Font size="18.0" />
+            </font>
+            <padding>
+                <Insets topRightBottomLeft="20" />
+            </padding>
+        </Label>
+    </top>
+
+    <center>
+        <GridPane hgap="20" vgap="20">
+            <padding>
+                <Insets bottom="60" top="60" />
+            </padding>
+
+            <Region GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+
+            <Label fx:id="customerNameLabel" text="Name:" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <font>
+               <Font name="System Bold" size="13.0" />
+            </font></Label>
+            <TextField fx:id="customerNameField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+            <Label fx:id="addressLine1Label" text="Address:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="addressLine1Field" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+            <Label fx:id="addressLine2Label" text="Address Line 2:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="addressLine2Field" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+            <Label fx:id="cityLabel" text="City:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="cityField" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+            <Label fx:id="postalCodeLabel" text="Postal Code:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="postalCodeField" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+
+            <Label fx:id="phoneNumberLabel" text="Phone Number:" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="phoneNumberField" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+
+            <Label fx:id="countryLabel" text="Country:" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <ComboBox fx:id="countryField" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="United States" />
+                        <String fx:value="Canada" />
+                        <String fx:value="Japan" />
+                        <String fx:value="Mexico" />
+                        <String fx:value="France" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label fx:id="activeLabel" text="Active:" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <HBox spacing="20" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                <RadioButton fx:id="activeYesButton" selected="true" text="YES">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="activeToggleGroup" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="activeNoButton" text="NO">
+                    <toggleGroup>
+                        <fx:reference source="activeToggleGroup" />
+                    </toggleGroup>
+                </RadioButton>
+            </HBox>
+
+
+            <HBox alignment="BASELINE_RIGHT" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="11">
+                <Button onAction="#handleSaveButton" text="Save">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Button>
+
+                <Button onAction="#handleCancelButton" text="Cancel">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Button>
+            </HBox>
+
+            <Region GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+
+        </GridPane>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane minHeight="675" minWidth="1150" styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.AppointmentViewController">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+
+    <top>
+        <Label fx:id="appointmentViewTitleLabel" text="Add New Appointment">
+            <font>
+                <Font size="18.0" />
+            </font>
+            <padding>
+                <Insets topRightBottomLeft="20" />
+            </padding>
+        </Label>
+    </top>
+
+    <center>
+        <GridPane hgap="20" vgap="20">
+            <padding>
+                <Insets bottom="60" top="60" />
+            </padding>
+
+            <Region GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+
+            <Label text="Appointment with User:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="userField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+            <Label text="Customer:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="customerField" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="United States" />
+                        <String fx:value="Canada" />
+                        <String fx:value="Japan" />
+                        <String fx:value="Mexico" />
+                        <String fx:value="France" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Title:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="titleField" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+            <Label text="Description:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="descriptionField" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+            <Label text="Location:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="locationField" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+
+            <Label text="Contact:" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="contactField" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+
+            <Label text="Type:" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="typeField" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+
+            <Label text="URL:" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="urlField" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+
+            <Label text="Start Date:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <DatePicker fx:id="startDateField" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <Label text="Start Time:" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <HBox GridPane.columnIndex="4" GridPane.rowIndex="2" spacing="5">
+                <ComboBox fx:id="startTimeHourField" >
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="1" />
+                            <String fx:value="2" />
+                            <String fx:value="3" />
+                            <String fx:value="4" />
+                            <String fx:value="5" />
+                            <String fx:value="6" />
+                            <String fx:value="7" />
+                            <String fx:value="8" />
+                            <String fx:value="9" />
+                            <String fx:value="10" />
+                            <String fx:value="11" />
+                            <String fx:value="12" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <ComboBox fx:id="startTimeMinuteField" >
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="00" />
+                            <String fx:value="15" />
+                            <String fx:value="30" />
+                            <String fx:value="45" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <HBox spacing="5">
+                    <RadioButton fx:id="startTimeAmButton" text="AM">
+                        <toggleGroup>
+                            <ToggleGroup fx:id="startTimeAmPmField" />
+                        </toggleGroup>
+                    </RadioButton>
+                    <RadioButton fx:id="startTimePmButton" selected="true" text="PM">
+                        <toggleGroup>
+                            <fx:reference source="startTimeAmPmField" />
+                        </toggleGroup>
+                    </RadioButton>
+                </HBox>
+            </HBox>
+
+            <Label text="End Date:" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <DatePicker fx:id="endDateField" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <Label text="End Time:" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <HBox GridPane.columnIndex="4" GridPane.rowIndex="4" spacing="5">
+                <ComboBox fx:id="endTimeHourField" >
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="1" />
+                            <String fx:value="2" />
+                            <String fx:value="3" />
+                            <String fx:value="4" />
+                            <String fx:value="5" />
+                            <String fx:value="6" />
+                            <String fx:value="7" />
+                            <String fx:value="8" />
+                            <String fx:value="9" />
+                            <String fx:value="10" />
+                            <String fx:value="11" />
+                            <String fx:value="12" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <ComboBox fx:id="endTimeMinuteField" >
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="00" />
+                            <String fx:value="15" />
+                            <String fx:value="30" />
+                            <String fx:value="45" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <HBox spacing="5">
+                    <RadioButton fx:id="endTimeAmButton" text="AM">
+                        <toggleGroup>
+                            <ToggleGroup fx:id="endTimeAmPmField" />
+                        </toggleGroup>
+                    </RadioButton>
+                    <RadioButton fx:id="endTimePmButton" selected="true" text="PM">
+                        <toggleGroup>
+                            <fx:reference source="endTimeAmPmField" />
+                        </toggleGroup>
+                    </RadioButton>
+                </HBox>
+            </HBox>
+
+            <HBox alignment="BASELINE_RIGHT" spacing="20.0" GridPane.columnIndex="4" GridPane.rowIndex="9">
+                <Button onAction="#handleSaveButton" text="Save">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Button>
+
+                <Button onAction="#handleCancelButton" text="Cancel">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Button>
+            </HBox>
+
+            <Region GridPane.columnIndex="5" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+
+        </GridPane>
+    </center>
+
+</BorderPane>

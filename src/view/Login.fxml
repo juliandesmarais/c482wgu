@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox minWidth="1150" minHeight="675" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.LoginViewController" styleClass="root">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+
+    <HBox alignment="BASELINE_RIGHT" spacing="15">
+        <Button text="Exit" onAction="#handleExitAction">
+         <font>
+            <Font size="15.0" />
+         </font></Button>
+    </HBox>
+
+    <GridPane alignment="CENTER" hgap="30" vgap="10" VBox.vgrow="ALWAYS">
+        <Label fx:id="usernameLabel" text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <Label fx:id="passwordLabel" text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Button fx:id="loginButton" onAction="#handleLoginAction" text="Log In" />
+        </HBox>
+    </GridPane>
+</VBox>
