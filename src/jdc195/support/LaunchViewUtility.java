@@ -44,7 +44,7 @@ public class LaunchViewUtility {
     case ADD_CUSTOMER:
       resourcePath += "Customer.fxml";
       break;
-    case ADD_APPT:
+    case ADD_APPOINTMENT:
       resourcePath += "Appointment.fxml";
       break;
     }
@@ -69,6 +69,7 @@ public class LaunchViewUtility {
   }
 
   public enum View {
-    LOGIN, OVERVIEW, ADD_CUSTOMER, ADD_APPT
+    LOGIN, OVERVIEW, ADD_CUSTOMER, ADD_APPOINTMENT
   }
+
 }

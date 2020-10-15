@@ -17,7 +17,7 @@
                     <Font size="15.0"/>
                 </font>
             </Button>
-            <Button onAction="#handleAppointmentCalendarAction" text="Appointment Calendar">
+            <Button fx:id="appointmentCalendarButton" onAction="#handleAppointmentCalendarAction" text="Appointment Calendar">
                 <font>
                     <Font size="15.0"/>
                 </font>

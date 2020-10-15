@@ -18,12 +18,11 @@ public class AlertUtility {
     public static void displayExitConfirmationAlert() {
         if (displayConfirmationAlert("Exit", "Are you sure you want to exit?")) {
             try {
+                System.exit(0);
                 ConnectionManager.getInstance().close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            System.exit(0);
         }
     }
 

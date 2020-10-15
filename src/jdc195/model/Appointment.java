@@ -188,8 +188,13 @@ public class Appointment extends Queryable {
     return columnsWithValues;
   }
 
-  public static ObservableList<Appointment> getAppointmentsTableData() throws SQLException {
+  public enum AppointmentsTableDataFilter {
+    ALL, CURRENT_MONTH, CURRENT_WEEK
+  }
+
+  public static ObservableList<Appointment> getAppointmentsTableData(AppointmentsTableDataFilter filter) throws SQLException {
     ResultSet resultSet = new Appointment().selectAll();
+
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
     while (resultSet.next()) {
@@ -203,15 +208,33 @@ public class Appointment extends Queryable {
           .setContact(resultSet.getString(Columns.CONTACT.getColumnName()))
           .setType(resultSet.getString(Columns.TYPE.getColumnName()))
           .setUrl(resultSet.getString(Columns.URL.getColumnName()))
-          .setStart(DateUtility.convertToLocal((resultSet.getObject(Columns.START.getColumnName(), LocalDateTime.class))))
-          .setEnd(DateUtility.convertToLocal((resultSet.getObject(Columns.END.getColumnName(), LocalDateTime.class))))
-          .setCreateDate(DateUtility.convertToLocal((resultSet.getObject(Columns.CREATE_DATE.getColumnName(), LocalDateTime.class))))
-          .setLastUpdate(DateUtility.convertToLocal((resultSet.getObject(Columns.LAST_UPDATE.getColumnName(), LocalDateTime.class))))
+          .setStart(DateUtility.getConvertedZonedDateTime((resultSet.getObject(Columns.START.getColumnName(), LocalDateTime.class))))
+          .setEnd(DateUtility.getConvertedZonedDateTime((resultSet.getObject(Columns.END.getColumnName(), LocalDateTime.class))))
+          .setCreateDate(DateUtility.getConvertedZonedDateTime((resultSet.getObject(Columns.CREATE_DATE.getColumnName(), LocalDateTime.class))))
+          .setLastUpdate(DateUtility.getConvertedZonedDateTime((resultSet.getObject(Columns.LAST_UPDATE.getColumnName(), LocalDateTime.class))))
           .setCreatedBy(resultSet.getString(Columns.CREATED_BY.getColumnName()))
           .setLastUpdateBy(resultSet.getString(Columns.LAST_UPDATE_BY.getColumnName())));
     }
 
+    switch (filter) {
+    case CURRENT_WEEK:
+      // Requirement G:1 - Lambda is useful in this case as a multiple statement loop is reduced to a single line
+      appointments = appointments.filtered(c -> DateUtility.getWeekOfYearFromLocalDateTime(c.getStart().toLocalDateTime()) == DateUtility.getWeekOfYearFromLocalDateTime(DateUtility.getCurrentLocalDateTime()));
+      break;
+    case CURRENT_MONTH:
+      // Requirement G:2 - Lambda is useful in this case as a multiple statement loop is reduced to a single line
+      appointments = appointments.filtered(c -> DateUtility.getConvertedLocalDateTime(c.getStart()).getMonth() == DateUtility.getCurrentLocalDateTime().getMonth() && c.getStart().getYear() == DateUtility.getCurrentLocalDateTime().getYear());
+      break;
+    default:
+      break;
+    }
+
     return appointments;
+  }
+
+  private ResultSet getCurrentWeekAppointmentResultSet() {
+//    return QueryUtility.executeSelectIncludingQuery(table, new Pair<>(Columns.START  ))
+    return null;
   }
 
   public static ResultSet getResultsWithAppointmentId(int appointmentId) throws SQLException {
@@ -220,7 +243,7 @@ public class Appointment extends Queryable {
 
   public static void checkLoginTimeWithinAppointmentWindow() throws SQLException {
     ResultSet allAppointments = new Appointment().selectAll();
-    LocalDateTime currentTime = DateUtility.getCurrentZonedDateTime().toLocalDateTime();
+    LocalDateTime currentTime = DateUtility.getCurrentZonedDateTimeInUTC().toLocalDateTime();
 
     while (allAppointments.next()) {
       LocalDateTime appointmentTime = allAppointments.getObject(Columns.START.getColumnName(), LocalDateTime.class);
@@ -234,8 +257,8 @@ public class Appointment extends Queryable {
   }
 
   public boolean isWithinBusinessHours() {
-    LocalDateTime startTime = DateUtility.convertToLocal(getStart().toLocalDateTime()).toLocalDateTime();
-    LocalDateTime endTime = DateUtility.convertToLocal(getEnd().toLocalDateTime()).toLocalDateTime();
+    LocalDateTime startTime = DateUtility.getConvertedLocalDateTime(getStart());
+    LocalDateTime endTime = DateUtility.getConvertedLocalDateTime(getEnd());
     boolean startTimeValid = startTime.getHour() >= 9 && startTime.getHour() <= 18;
     boolean endTimeValid = endTime.getHour() >= 9 && endTime.getHour() <= 18;
 
@@ -248,7 +271,6 @@ public class Appointment extends Queryable {
   }
 
   public boolean isValidAppointmentTime() throws SQLException {
-    // Exclude current appointment from query if in edit appointment state
     ResultSet allAppointments = selectAll();
     LocalDateTime apptStart = getStart().toLocalDateTime();
     LocalDateTime apptEnd = getEnd().toLocalDateTime();
@@ -266,7 +288,7 @@ public class Appointment extends Queryable {
         // Start or end time cannot be in between any appointments
         if ((startTimeBetween || endTimeBetween) && sameUser) {
           String failureMessage = ("Appointment start or end time cannot be in between any existing appointment time."
-              + String.format("\n\nIntersected appointment time: \nStart: %s \nEnd: %s", DateUtility.convertToLocal(currentStart), DateUtility.convertToLocal(currentEnd)));
+              + String.format("\n\nIntersected appointment time: \nStart: %s \nEnd: %s", DateUtility.getConvertedZonedDateTime(currentStart), DateUtility.getConvertedZonedDateTime(currentEnd)));
 
           AlertUtility.displayErrorAlert("Invalid Appointment Time", failureMessage);
           return false;
@@ -278,7 +300,7 @@ public class Appointment extends Queryable {
 
         if ((!beforeValid && !afterValid) && sameUser) {
           String failureMessage = ("Appointment must begin and end outside of any existing appointment time."
-              + String.format("\n\nExisting Appointment: \nStart: %s \nEnd: %s", DateUtility.convertToLocal(currentStart), DateUtility.convertToLocal(currentEnd)));
+              + String.format("\n\nExisting Appointment: \nStart: %s \nEnd: %s", DateUtility.getConvertedZonedDateTime(currentStart), DateUtility.getConvertedZonedDateTime(currentEnd)));
 
           AlertUtility.displayErrorAlert("Invalid Appointment Time", failureMessage);
           return false;

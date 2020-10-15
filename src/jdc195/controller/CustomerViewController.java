@@ -86,7 +86,7 @@ public class CustomerViewController implements Initializable {
     return TextFieldChecker.validateTextFieldContents(textFields);
   }
 
-  private Customer getCurrentCustomer() throws SQLException, ParseException {
+  private Customer getCurrentCustomer() throws SQLException {
     Boolean isCustomerActivated = activeYesButton.isSelected();
 
     return new Customer()
@@ -164,7 +164,7 @@ public class CustomerViewController implements Initializable {
     }
   }
 
-  private Integer getAddressKeyForEnteredFieldValue() throws SQLException, ParseException {
+  private Integer getAddressKeyForEnteredFieldValue() throws SQLException {
     Address address = new Address()
         .setAddress(addressLine1Field.getText())
         .setAddress2(addressLine2Field.getText())

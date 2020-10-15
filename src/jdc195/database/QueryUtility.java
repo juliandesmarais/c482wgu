@@ -24,14 +24,6 @@ public class QueryUtility {
     return sqlStatement.executeQuery();
   }
 
-  public static <T> ResultSet executeSelectExcludingQuery(Tables table, Pair<Columns, T> filter) throws SQLException {
-    String statement = String.format("SELECT * FROM %s WHERE %s<>?", table.name().toLowerCase(), filter.getKey().getColumnName());
-    PreparedStatement sqlStatement = ConnectionManager.getInstance().prepareStatement(statement);
-    sqlStatement.setObject(1,  filter.getValue());
-
-    return sqlStatement.executeQuery();
-  }
-
   public static <T> ResultSet executeSelectIncludingQuery(Tables table, LinkedHashMap<Columns, T> filter) throws SQLException {
     StringBuilder filterBuilder = new StringBuilder();
     List<Columns> columnKeys = new ArrayList<>(filter.keySet());
@@ -46,20 +38,26 @@ public class QueryUtility {
     }
 
     String initialQuery = String.format("SELECT * FROM %s WHERE %s", table.toString().toLowerCase(), filterBuilder.toString());
-
     PreparedStatement sqlStatement = ConnectionManager.getInstance().prepareStatement(initialQuery, Statement.RETURN_GENERATED_KEYS);
-
     int valuesParameterIndex = 1;
 
     for (T value : filter.values()) {
       if (value instanceof ZonedDateTime) {
-        sqlStatement.setObject(valuesParameterIndex,  convertValueForInsertion(value));
+        sqlStatement.setObject(valuesParameterIndex,  convertValueForDatabaseInsertion(value));
       } else {
         sqlStatement.setObject(valuesParameterIndex, value);
       }
 
       valuesParameterIndex += 1;
     }
+
+    return sqlStatement.executeQuery();
+  }
+
+  public static <T> ResultSet executeSelectExcludingQuery(Tables table, Pair<Columns, T> filter) throws SQLException {
+    String statement = String.format("SELECT * FROM %s WHERE %s<>?", table.name().toLowerCase(), filter.getKey().getColumnName());
+    PreparedStatement sqlStatement = ConnectionManager.getInstance().prepareStatement(statement);
+    sqlStatement.setObject(1,  filter.getValue());
 
     return sqlStatement.executeQuery();
   }
@@ -89,7 +87,7 @@ public class QueryUtility {
 
     for (T value : columnsWithValues.values()) {
       if (value instanceof ZonedDateTime) {
-        sqlStatement.setObject(valuesParameterIndex,  convertValueForInsertion(value));
+        sqlStatement.setObject(valuesParameterIndex,  convertValueForDatabaseInsertion(value));
       } else {
         sqlStatement.setObject(valuesParameterIndex, value);
       }
@@ -106,12 +104,13 @@ public class QueryUtility {
     return 0;
   }
 
+  // RETURNS KEY
   public static Integer executeDelete(Tables table, Pair<Columns, Object> filter) throws SQLException {
-    String statement = String.format("DELETE FROM %s WHERE %s=?", table.getName(), filter.getKey().getColumnName());
+    String statement = String.format("DELETE FROM %s WHERE %s=?", table.getTableName(), filter.getKey().getColumnName());
     PreparedStatement sqlStatement = ConnectionManager.getInstance().prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
 
     if (filter.getValue() instanceof ZonedDateTime) {
-      sqlStatement.setObject(1, convertValueForInsertion(filter.getValue()));
+      sqlStatement.setObject(1, convertValueForDatabaseInsertion(filter.getValue()));
     } else {
       sqlStatement.setObject(1, filter.getValue());
     }
@@ -125,18 +124,19 @@ public class QueryUtility {
     return 0;
   }
 
+  // RETURNS KEY
   public static <T> Integer executeUpdateQuery(Tables table, Pair<Columns, T> set, Pair<Columns, T> filter) throws SQLException {
-    String statement = String.format("UPDATE %s SET %s=? WHERE %s=?", table.getName(), set.getKey().getColumnName(), filter.getKey().getColumnName());
+    String statement = String.format("UPDATE %s SET %s=? WHERE %s=?", table.getTableName(), set.getKey().getColumnName(), filter.getKey().getColumnName());
     PreparedStatement sqlStatement = ConnectionManager.getInstance().prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
 
     if (set.getValue() instanceof ZonedDateTime) {
-      sqlStatement.setObject(1, convertValueForInsertion(set.getValue()));
+      sqlStatement.setObject(1, convertValueForDatabaseInsertion(set.getValue()));
     } else {
       sqlStatement.setObject(1, set.getValue());
     }
 
     if (filter.getValue() instanceof ZonedDateTime) {
-      sqlStatement.setObject(2,  convertValueForInsertion(filter.getValue()));
+      sqlStatement.setObject(2,  convertValueForDatabaseInsertion(filter.getValue()));
     } else {
       sqlStatement.setObject(2, filter.getValue());
     }
@@ -150,7 +150,7 @@ public class QueryUtility {
     return 0;
   }
 
-  private static LocalDateTime convertValueForInsertion(Object value) {
+  private static LocalDateTime convertValueForDatabaseInsertion(Object value) {
     ZonedDateTime converted = (ZonedDateTime) value;
     return converted.toLocalDateTime();
   }

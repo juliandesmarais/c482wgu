@@ -123,7 +123,7 @@ public class AppointmentViewController implements Initializable {
     RadioButton amButton = setStartTime ? startTimeAmButton : endTimeAmButton;
     DatePicker datePicker = setStartTime ? startDateField : endDateField;
 
-    ZonedDateTime converted = DateUtility.convertToLocal(localDateTime);
+    ZonedDateTime converted = DateUtility.getConvertedZonedDateTime(localDateTime);
     datePicker.setValue(converted.toLocalDate());
 
     int hour = converted.getHour();

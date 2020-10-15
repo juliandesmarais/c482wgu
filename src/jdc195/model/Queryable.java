@@ -25,7 +25,7 @@ public abstract class Queryable {
       this.lastUpdateBy = currentUser.getUserName();
     }
 
-    createDate = DateUtility.getCurrentZonedDateTime();
+    createDate = DateUtility.getCurrentZonedDateTimeInUTC();
   }
 
   protected LinkedHashMap<Columns, Object> getUserDataColumnsWithValues() {

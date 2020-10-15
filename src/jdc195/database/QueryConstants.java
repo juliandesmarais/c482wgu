@@ -9,7 +9,7 @@ public class QueryConstants {
     CUSTOMER,
     USER;
 
-    public String getName() {
+    public String getTableName() {
       return this.name().toLowerCase();
     }
   }
