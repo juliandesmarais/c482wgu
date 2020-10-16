@@ -220,7 +220,7 @@ public class AppointmentViewController implements Initializable {
         appointment.setAppointmentId(savedAppointment.getAppointmentId());
       }
 
-      if (!appointment.isWithinBusinessHours() || !appointment.isValidAppointmentTime()) {
+      if (!appointment.isStartAfterEnd() || !appointment.isWithinBusinessHours() || !appointment.isValidAppointmentTime()) {
         return;
       }
 

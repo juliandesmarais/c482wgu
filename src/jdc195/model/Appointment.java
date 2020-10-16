@@ -232,11 +232,6 @@ public class Appointment extends Queryable {
     return appointments;
   }
 
-  private ResultSet getCurrentWeekAppointmentResultSet() {
-//    return QueryUtility.executeSelectIncludingQuery(table, new Pair<>(Columns.START  ))
-    return null;
-  }
-
   public static ResultSet getResultsWithAppointmentId(int appointmentId) throws SQLException {
     return QueryUtility.executeSelectIncludingQuery(Tables.APPOINTMENT, new Pair<>(Columns.APPOINTMENT_ID, appointmentId));
   }
@@ -254,6 +249,17 @@ public class Appointment extends Queryable {
         AlertUtility.displayAlert(Alert.AlertType.WARNING, null, "Appointment", "There is an appointment within 15 minutes.");
       }
     }
+  }
+
+  public boolean isStartAfterEnd() {
+    LocalDateTime startTime = DateUtility.getConvertedLocalDateTime(getStart());
+    LocalDateTime endTime = DateUtility.getConvertedLocalDateTime(getEnd());
+    if (startTime.isEqual(endTime) || startTime.isAfter(endTime)) {
+      AlertUtility.displayErrorAlert("Invalid Appointment Time", String.format("Appointment start time must be before appointment end time."));
+      return false;
+    }
+
+    return true;
   }
 
   public boolean isWithinBusinessHours() {

@@ -63,6 +63,7 @@ public class CustomerViewController implements Initializable {
       }
 
     } catch (SQLException e) {
+      AlertUtility.displayErrorAlert("Error", "An error occurred when loading the selected customer to modify.");
       e.printStackTrace();
     }
 
