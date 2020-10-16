@@ -123,7 +123,7 @@ public class AppointmentViewController implements Initializable {
     RadioButton amButton = setStartTime ? startTimeAmButton : endTimeAmButton;
     DatePicker datePicker = setStartTime ? startDateField : endDateField;
 
-    ZonedDateTime converted = DateUtility.getConvertedZonedDateTime(localDateTime);
+    ZonedDateTime converted = DateUtility.convertLocalDateTimeToSystemDefaultZDT(localDateTime);
     datePicker.setValue(converted.toLocalDate());
 
     int hour = converted.getHour();
@@ -178,15 +178,23 @@ public class AppointmentViewController implements Initializable {
   private ZonedDateTime getCurrentStartDate() {
     LocalTime startTime = getComboBoxTime(TimeFieldType.START);
     LocalDateTime startDateTime = LocalDateTime.of(startDateField.getValue(), startTime);
-    ZonedDateTime local =  ZonedDateTime.of(startDateTime, ZoneId.systemDefault());
-    return ZonedDateTime.ofInstant(local.toInstant(), ZoneId.of("UTC"));
+
+    return ZonedDateTime.of(startDateTime, ZoneId.systemDefault());
+
+    // TODO: There is an open issue with the connector where LocalDateTime values are being converted
+    //    ZonedDateTime local =  ZonedDateTime.of(startDateTime, ZoneId.systemDefault());
+    //    return ZonedDateTime.ofInstant(local.toInstant(), ZoneId.of("UTC"));
   }
 
   private ZonedDateTime getCurrentEndDate() {
     LocalTime endTime = getComboBoxTime(TimeFieldType.END);
     LocalDateTime endDateTime = LocalDateTime.of(endDateField.getValue(), endTime);
-    ZonedDateTime local =  ZonedDateTime.of(endDateTime, ZoneId.systemDefault());
-    return ZonedDateTime.ofInstant(local.toInstant(), ZoneId.of("UTC"));
+
+    return ZonedDateTime.of(endDateTime, ZoneId.systemDefault());
+
+    // TODO: There is an open issue with the connector where LocalDateTime values are being converted
+    //    ZonedDateTime local =  ZonedDateTime.of(endDateTime, ZoneId.systemDefault());
+    //    return ZonedDateTime.ofInstant(local.toInstant(), ZoneId.of("UTC"));
   }
 
   private Integer getCurrentCustomerId() throws SQLException {

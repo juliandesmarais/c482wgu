@@ -5,26 +5,31 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minWidth="1150" minHeight="675" styleClass="root" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.OverviewViewController">
+<BorderPane minHeight="675" minWidth="1150" styleClass="root" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.OverviewViewController">
     <padding>
-        <Insets bottom="10" left="10" right="10" top="10"/>
+        <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
 
     <top>
         <HBox alignment="BASELINE_RIGHT" spacing="15">
             <Button text="Generate Reports">
                 <font>
-                    <Font size="15.0"/>
+                    <Font size="15.0" />
                 </font>
             </Button>
             <Button fx:id="appointmentCalendarButton" onAction="#handleAppointmentCalendarAction" text="Appointment Calendar">
                 <font>
-                    <Font size="15.0"/>
+                    <Font size="15.0" />
+                </font>
+            </Button>
+            <Button onAction="#handleLogOutAction" text="Log Out">
+                <font>
+                    <Font size="15.0" />
                 </font>
             </Button>
             <Button onAction="#handleExitAction" text="Exit">
                 <font>
-                    <Font size="15.0"/>
+                    <Font size="15.0" />
                 </font>
             </Button>
         </HBox>
@@ -36,22 +41,22 @@
         <VBox fx:id="customerTableBox" spacing="20" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
             <Label text="Customers">
                 <font>
-                    <Font name="System Bold" size="18.0"/>
+                    <Font name="System Bold" size="18.0" />
                 </font>
             </Label>
 
             <TableView fx:id="customersTableView" minWidth="250" GridPane.vgrow="ALWAYS" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="customerIdCol" text="ID"/>
-                    <TableColumn fx:id="customerNameCol" text="Name"/>
-                    <TableColumn fx:id="customerActiveCol" text="Active"/>
+                    <TableColumn fx:id="customerIdCol" text="ID" />
+                    <TableColumn fx:id="customerNameCol" text="Name" />
+                    <TableColumn fx:id="customerActiveCol" text="Active" />
                 </columns>
             </TableView>
 
             <HBox spacing="15">
-                <Button onAction="#handleAddCustomerAction" text="Add"/>
-                <Button onAction="#handleModifyCustomerAction" text="Modify"/>
-                <Button onAction="#handleDeleteCustomerAction" text="Delete"/>
+                <Button onAction="#handleAddCustomerAction" text="Add" />
+                <Button onAction="#handleModifyCustomerAction" text="Modify" />
+                <Button onAction="#handleDeleteCustomerAction" text="Delete" />
             </HBox>
         </VBox>
     </left>
@@ -61,9 +66,9 @@
             <!--            Appointments Table-->
             <VBox spacing="20" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
 
-                <Label text="Appointments">
+                <Label fx:id="appointmentsTableTitleLabel" text="Appointments">
                     <font>
-                        <Font name="System Bold" size="18.0"/>
+                        <Font name="System Bold" size="18.0" />
                     </font>
                 </Label>
 
@@ -71,29 +76,36 @@
                 <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                     <TableView fx:id="appointmentsTableView" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="appointmentsCustomerCol" text="Customer"/>
-                            <TableColumn fx:id="appointmentsTitleCol" text="Title"/>
-                            <TableColumn fx:id="appointmentsDescriptionCol" text="Description"/>
-                            <TableColumn fx:id="appointmentsLocationCol" text="Location"/>
-                            <TableColumn fx:id="appointmentsContactCol" text="Contact"/>
-                            <TableColumn fx:id="appointmentsTypeCol" text="Type"/>
-                            <TableColumn fx:id="appointmentsUrlCol" text="URL"/>
-                            <TableColumn fx:id="appointmentsStartDateCol" text="Start Date"/>
-                            <TableColumn fx:id="appointmentsEndDateCol" text="End Date"/>
-                            <TableColumn fx:id="appointmentsCreatedDateCol" text="Created Date"/>
-                            <TableColumn fx:id="appointmentsCreatedByCol" text="Created By"/>
-                            <TableColumn fx:id="appointmentsLastUpdateDateCol" text="Last Update"/>
-                            <TableColumn fx:id="appointmentsLastUpdateByCol" text="Last Update By"/>
+                            <TableColumn fx:id="appointmentsCustomerCol" text="Customer" />
+                            <TableColumn fx:id="appointmentsTitleCol" text="Title" />
+                            <TableColumn fx:id="appointmentsDescriptionCol" text="Description" />
+                            <TableColumn fx:id="appointmentsLocationCol" text="Location" />
+                            <TableColumn fx:id="appointmentsContactCol" text="Contact" />
+                            <TableColumn fx:id="appointmentsTypeCol" text="Type" />
+                            <TableColumn fx:id="appointmentsUrlCol" text="URL" />
+                            <TableColumn fx:id="appointmentsStartDateCol" text="Start Date" />
+                            <TableColumn fx:id="appointmentsEndDateCol" text="End Date" />
+                            <TableColumn fx:id="appointmentsCreatedDateCol" text="Created Date" />
+                            <TableColumn fx:id="appointmentsCreatedByCol" text="Created By" />
+                            <TableColumn fx:id="appointmentsLastUpdateDateCol" text="Last Update" />
+                            <TableColumn fx:id="appointmentsLastUpdateByCol" text="Last Update By" />
                         </columns>
                     </TableView>
                 </ScrollPane>
 
                 <HBox spacing="15">
-                    <Button onAction="#handleAddAppointmentAction" text="Add"/>
-                    <Button onAction="#handleModifyAppointmentAction" text="Modify"/>
-                    <Button onAction="#handleDeleteAppointmentAction" text="Delete"/>
+                    <Button onAction="#handleAddAppointmentAction" text="Add" />
+                    <Button onAction="#handleModifyAppointmentAction" text="Modify" />
+                    <Button onAction="#handleDeleteAppointmentAction" text="Delete" />
                 </HBox>
             </VBox>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+         </rowConstraints>
         </GridPane>
 
     </center>

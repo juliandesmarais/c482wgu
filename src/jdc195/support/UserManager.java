@@ -22,7 +22,7 @@ public class UserManager {
   }
 
   public void setUser(User user) {
-    this.currentUser = user;
+    currentUser = user;
   }
 
   public User getUser() {

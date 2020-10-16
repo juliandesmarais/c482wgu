@@ -19,6 +19,7 @@ import jdc195.model.Customer;
 import jdc195.support.AlertUtility;
 import jdc195.support.LaunchViewUtility;
 import jdc195.support.LaunchViewUtility.View;
+import jdc195.support.UserManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.util.ResourceBundle;
 
 public class OverviewViewController implements Initializable {
 
+  @FXML private Label appointmentsTableTitleLabel;
   @FXML private Button appointmentCalendarButton;
   @FXML private TableView<Customer> customersTableView;
   @FXML private TableColumn<Customer, Integer> customerIdCol;
@@ -55,12 +57,12 @@ public class OverviewViewController implements Initializable {
     setupCustomerTable();
     refreshCustomerTableView();
 
-    setAppointmentCalendarButtonText();
+    setAppointmentCalendarElementLabels();
     setupAppointmentsTable();
     refreshAppointmentsTableView();
   }
 
-  private void setAppointmentCalendarButtonText() {
+  private void setAppointmentCalendarElementLabels() {
     final String appointmentCalendarDefaultText = "Appointment Calendar";
     final String appointmentCalendarFilterEnabledText = " √ Appointment Calendar";
 
@@ -69,7 +71,11 @@ public class OverviewViewController implements Initializable {
       appointmentCalendarButton.setText(appointmentCalendarDefaultText);
       break;
     case CURRENT_MONTH:
+      appointmentsTableTitleLabel.setText("Appointments (Current Month)");
+      appointmentCalendarButton.setText(appointmentCalendarFilterEnabledText);
+      break;
     case CURRENT_WEEK:
+      appointmentsTableTitleLabel.setText("Appointments (Current Week)");
       appointmentCalendarButton.setText(appointmentCalendarFilterEnabledText);
       break;
     }
@@ -84,6 +90,13 @@ public class OverviewViewController implements Initializable {
   }
 
   //region Action Handlers
+  public void handleLogOutAction(ActionEvent event) {
+    if (AlertUtility.displayConfirmationAlert("Log Out", "Are you sure you want to log out?")) {
+      UserManager.getInstance().setUser(null);
+      new LaunchViewUtility().launchView(event, View.LOGIN);
+    }
+  }
+
   public void handleGenerateReportsAction(ActionEvent event) {
 
   }
@@ -161,7 +174,7 @@ public class OverviewViewController implements Initializable {
         System.out.println("Displaying all appointments.");
       }
 
-      setAppointmentCalendarButtonText();
+      setAppointmentCalendarElementLabels();
 
       if (!resultText.contains("Cancel")) {
         refreshAppointmentsTableView();
@@ -203,6 +216,7 @@ public class OverviewViewController implements Initializable {
       appointmentsTableView.setItems(Appointment.getAppointmentsTableData(appointmentsTableDataFilter));
     } catch (SQLException e) {
       e.printStackTrace();
+
     }
   }
   //endregion Appointments Table

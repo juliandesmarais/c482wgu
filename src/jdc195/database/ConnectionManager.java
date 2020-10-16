@@ -2,6 +2,7 @@ package jdc195.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConnectionManager {
 
@@ -30,7 +31,11 @@ public class ConnectionManager {
   }
 
   public static synchronized Connection getInstance() {
-    if (instance == null) {
+    try {
+      if (instance == null || instance.isClosed()) {
+        instance = getMySQLDatabaseConnection();
+      }
+    } catch (SQLException e) {
       instance = getMySQLDatabaseConnection();
     }
 
