@@ -92,7 +92,7 @@ public class OverviewViewController implements Initializable {
   //region Action Handlers
   public void handleLogOutAction(ActionEvent event) {
     if (AlertUtility.displayConfirmationAlert("Log Out", "Are you sure you want to log out?")) {
-      UserManager.getInstance().setUser(null);
+      UserManager.getInstance().resetUser();
       new LaunchViewUtility().launchView(event, View.LOGIN);
     }
   }
