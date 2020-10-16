@@ -12,13 +12,17 @@ public class DateUtility {
     return ZonedDateTime.ofInstant(Instant.now().truncatedTo(ChronoUnit.MILLIS), ZoneId.of("UTC"));
   }
 
-  public static LocalDateTime getCurrentLocalDateTime() {
+  public static ZonedDateTime getCurrentSystemDefaultZonedDateTime() {
+    return ZonedDateTime.of(getCurrentSystemDefaultLocalDateTime(), ZoneId.systemDefault());
+  }
+
+  public static LocalDateTime getCurrentSystemDefaultLocalDateTime() {
     return LocalDateTime.now();
     //    return convertZonedDateTimeToSystemDefaultLDT(getCurrentZonedDateTimeInUTC());
   }
 
   /**
-   * Converts the given LocalDateTime object (assuming it is in UTC) to a ZonedDateTime object in the System Default time zone.
+   * Converts the given LocalDateTime object (assuming it has been set in UTC) to a ZonedDateTime object in the System Default time zone.
    * Use when reading date fields retrieved from the database and populating data models (which use ZonedDateTime).
    *
    * @param localDateTime The LocalDateTime object to convert, in UTC.
@@ -29,7 +33,7 @@ public class DateUtility {
   }
 
   public static LocalDateTime convertLocalDateTimeToSystemDefaultLDT(LocalDateTime localDateTime) {
-    return localDateTime.toInstant(ZoneOffset.UTC).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    return convertLocalDateTimeToSystemDefaultZDT(localDateTime).toLocalDateTime();
   }
 
   public static int getWeekOfYearFromLocalDateTime(LocalDateTime localDateTime) {

@@ -219,11 +219,11 @@ public class Appointment extends Queryable {
     switch (filter) {
     case CURRENT_WEEK:
       // Requirement G:1 - Lambda is useful in this case as a multiple statement loop is reduced to a single line
-      appointments = appointments.filtered(c -> DateUtility.getWeekOfYearFromLocalDateTime(c.getStart().toLocalDateTime()) == DateUtility.getWeekOfYearFromLocalDateTime(DateUtility.getCurrentLocalDateTime()));
+      appointments = appointments.filtered(c -> DateUtility.getWeekOfYearFromLocalDateTime(c.getStart().toLocalDateTime()) == DateUtility.getWeekOfYearFromLocalDateTime(DateUtility.getCurrentSystemDefaultLocalDateTime()));
       break;
     case CURRENT_MONTH:
       // Requirement G:2 - Lambda is useful in this case as a multiple statement loop is reduced to a single line
-      appointments = appointments.filtered(c -> c.getStart().getMonth() == DateUtility.getCurrentLocalDateTime().getMonth() && c.getStart().getYear() == DateUtility.getCurrentLocalDateTime().getYear());
+      appointments = appointments.filtered(c -> c.getStart().getMonth() == DateUtility.getCurrentSystemDefaultLocalDateTime().getMonth() && c.getStart().getYear() == DateUtility.getCurrentSystemDefaultLocalDateTime().getYear());
       break;
     default:
       break;

@@ -43,7 +43,7 @@ public class QueryUtility {
 
     for (T value : filter.values()) {
       if (value instanceof ZonedDateTime) {
-        sqlStatement.setObject(valuesParameterIndex,  convertValueForDatabaseInsertion(value));
+        sqlStatement.setObject(valuesParameterIndex,  prepareLocalDateTime(value));
       } else {
         sqlStatement.setObject(valuesParameterIndex, value);
       }
@@ -87,7 +87,7 @@ public class QueryUtility {
 
     for (T value : columnsWithValues.values()) {
       if (value instanceof ZonedDateTime) {
-        sqlStatement.setObject(valuesParameterIndex,  convertValueForDatabaseInsertion(value));
+        sqlStatement.setObject(valuesParameterIndex,  prepareLocalDateTime(value));
       } else {
         sqlStatement.setObject(valuesParameterIndex, value);
       }
@@ -110,7 +110,7 @@ public class QueryUtility {
     PreparedStatement sqlStatement = ConnectionManager.getInstance().prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
 
     if (filter.getValue() instanceof ZonedDateTime) {
-      sqlStatement.setObject(1, convertValueForDatabaseInsertion(filter.getValue()));
+      sqlStatement.setObject(1, prepareLocalDateTime(filter.getValue()));
     } else {
       sqlStatement.setObject(1, filter.getValue());
     }
@@ -130,13 +130,13 @@ public class QueryUtility {
     PreparedStatement sqlStatement = ConnectionManager.getInstance().prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
 
     if (set.getValue() instanceof ZonedDateTime) {
-      sqlStatement.setObject(1, convertValueForDatabaseInsertion(set.getValue()));
+      sqlStatement.setObject(1, prepareLocalDateTime(set.getValue()));
     } else {
       sqlStatement.setObject(1, set.getValue());
     }
 
     if (filter.getValue() instanceof ZonedDateTime) {
-      sqlStatement.setObject(2,  convertValueForDatabaseInsertion(filter.getValue()));
+      sqlStatement.setObject(2,  prepareLocalDateTime(filter.getValue()));
     } else {
       sqlStatement.setObject(2, filter.getValue());
     }
@@ -150,7 +150,7 @@ public class QueryUtility {
     return 0;
   }
 
-  private static LocalDateTime convertValueForDatabaseInsertion(Object value) {
+  private static LocalDateTime prepareLocalDateTime(Object value) {
     ZonedDateTime converted = (ZonedDateTime) value;
     return converted.toLocalDateTime();
   }
