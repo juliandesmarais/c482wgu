@@ -19,7 +19,7 @@ public class ConnectionManager {
     String username = "U05zQK";
     String password = "53688654494";
 
-    String connectionString = "jdbc:mysql://"  + serverName +  ":3306/" + databaseName + "?user=" + username + "&password=" + password + "&useUnicode=true&characterEncoding=UTF-8";
+    String connectionString = "jdbc:mysql://"  + serverName +  ":3306/" + databaseName + "?user=" + username + "&password=" + password;
 
     try {
       return DriverManager.getConnection(connectionString);
