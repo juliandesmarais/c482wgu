@@ -26,7 +26,6 @@ public abstract class Queryable {
     }
 
     createDate = DateUtility.getCurrentSystemDefaultZonedDateTime();
-//    createDate = DateUtility.getCurrentZonedDateTimeInUTC();
   }
 
   protected LinkedHashMap<Columns, Object> getUserDataColumnsWithValues() {

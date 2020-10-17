@@ -41,7 +41,6 @@ public class AlertUtility {
             alert.setHeaderText(header);
         }
         if (content != null) {
-            content = content.replace("[", "").replace("]", "").replace(",", "\n");
             alert.setContentText(content);
         }
 
