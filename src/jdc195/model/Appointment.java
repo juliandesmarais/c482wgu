@@ -219,10 +219,12 @@ public class Appointment extends Queryable {
     switch (filter) {
     case CURRENT_WEEK:
       // Requirement G:1 - Lambda is useful in this case as a multiple statement loop is reduced to a single line
+      // Function is filtering the appointment data set to reduce it to the set that has the same week of year as the current week of year
       appointments = appointments.filtered(c -> DateUtility.getWeekOfYearFromLocalDateTime(c.getStart().toLocalDateTime()) == DateUtility.getWeekOfYearFromLocalDateTime(DateUtility.getCurrentSystemDefaultLocalDateTime()));
       break;
     case CURRENT_MONTH:
       // Requirement G:2 - Lambda is useful in this case as a multiple statement loop is reduced to a single line
+      // Function is filtering the appointment data set to reduce it to the set that has the same month and the same year as the current month and year
       appointments = appointments.filtered(c -> c.getStart().getMonth() == DateUtility.getCurrentSystemDefaultLocalDateTime().getMonth() && c.getStart().getYear() == DateUtility.getCurrentSystemDefaultLocalDateTime().getYear());
       break;
     default:
