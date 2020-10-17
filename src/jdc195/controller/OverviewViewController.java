@@ -156,7 +156,7 @@ public class OverviewViewController implements Initializable {
     StringBuilder actualMap = new StringBuilder();
     map.forEach((k, v) -> {
       if (k.equals(UserManager.getInstance().getUser().getUserId())) {
-        actualMap.append("Current Consultant Info: \n").append(UserManager.getInstance().getUser().toString()).append("\n");
+        actualMap.append("Current Consultant: ").append(UserManager.getInstance().getUser().getUserName()).append("\n");
         actualMap.append("Appointment Count: ").append(v).append("\n");
       }
     });
@@ -175,7 +175,7 @@ public class OverviewViewController implements Initializable {
     map.forEach((k, v) -> {
       try {
         actualMap.append("Customer Name: ").append(Customer.getCustomerNameWithId(k));
-        actualMap.append("  |  Appointments: ").append(v);
+        actualMap.append("  |  Appointments: ").append(v).append("\n");
       } catch (SQLException e) {
         AlertUtility.displayErrorAlert("Error", "An error occurred when retrieving customer data.");
         e.printStackTrace();
