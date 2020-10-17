@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="675" minWidth="1150" styleClass="root" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.OverviewViewController">
+<BorderPane minHeight="675" minWidth="1275" styleClass="root" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.OverviewViewController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>

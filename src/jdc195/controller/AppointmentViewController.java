@@ -138,7 +138,7 @@ public class AppointmentViewController implements Initializable {
     }
 
     hourField.getSelectionModel().select(String.valueOf(convertedHour));
-    minuteField.getSelectionModel().select(systemDefaultZDT.getMinute());
+    minuteField.getSelectionModel().select(String.valueOf(systemDefaultZDT.getMinute()));
 
     if (pm) {
       pmButton.setSelected(true);

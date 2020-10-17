@@ -255,10 +255,6 @@ public class Appointment extends Queryable {
     LocalDateTime startTime = getStart().toLocalDateTime();
     LocalDateTime endTime = getEnd().toLocalDateTime();
 
-    // TODO: There is an open issue with the connector where LocalDateTime values are being converted
-    //    LocalDateTime startTime = DateUtility.convertZonedDateTimeToSystemDefaultLDT(getStart());
-    //    LocalDateTime endTime = DateUtility.convertZonedDateTimeToSystemDefaultLDT(getEnd());
-
     if (startTime.isEqual(endTime) || startTime.isAfter(endTime)) {
       AlertUtility.displayErrorAlert("Invalid Appointment Time", String.format("Appointment start time must be before appointment end time."));
       return false;
@@ -270,10 +266,6 @@ public class Appointment extends Queryable {
   public boolean isWithinBusinessHours() {
     LocalDateTime startTime = getStart().toLocalDateTime();
     LocalDateTime endTime = getEnd().toLocalDateTime();
-
-    // TODO: There is an open issue with the connector where LocalDateTime values are being converted
-    //    LocalDateTime startTime = DateUtility.convertZonedDateTimeToSystemDefaultLDT(getStart());
-    //    LocalDateTime endTime = DateUtility.convertZonedDateTimeToSystemDefaultLDT(getEnd());
 
     boolean startTimeValid = startTime.getHour() >= 9 && startTime.getHour() <= 18;
     boolean endTimeValid = endTime.getHour() >= 9 && endTime.getHour() <= 18;
@@ -297,9 +289,6 @@ public class Appointment extends Queryable {
 
         LocalDateTime currentStart = DateUtility.convertLocalDateTimeToSystemDefaultLDT(allAppointments.getObject(Columns.START.getColumnName(), LocalDateTime.class));
         LocalDateTime currentEnd = DateUtility.convertLocalDateTimeToSystemDefaultLDT(allAppointments.getObject(Columns.END.getColumnName(), LocalDateTime.class));
-        // TODO: There is an open issue with the connector where LocalDateTime values are being converted
-        //        LocalDateTime currentStart = allAppointments.getObject(Columns.START.getColumnName(), LocalDateTime.class);
-        //        LocalDateTime currentEnd = allAppointments.getObject(Columns.END.getColumnName(), LocalDateTime.class);
 
         boolean startTimeBetween = apptStart.isAfter(currentStart) && apptStart.isBefore(currentEnd);
         boolean endTimeBetween = apptEnd.isAfter(currentStart) && apptEnd.isBefore(currentEnd);
@@ -308,7 +297,6 @@ public class Appointment extends Queryable {
         if ((startTimeBetween || endTimeBetween) && sameUser) {
           String failureMessage = ("Appointment start or end time cannot be in between any existing appointment time."
                         + String.format("\n\nIntersected appointment time: \nStart: %s \nEnd: %s", currentStart, currentEnd));
-//              + String.format("\n\nIntersected appointment time: \nStart: %s \nEnd: %s", DateUtility.convertLocalDateTimeToSystemDefaultZDT(currentStart), DateUtility.convertLocalDateTimeToSystemDefaultZDT(currentEnd)));
 
           AlertUtility.displayErrorAlert("Invalid Appointment Time", failureMessage);
           return false;
@@ -321,7 +309,6 @@ public class Appointment extends Queryable {
         if ((!beforeValid && !afterValid) && sameUser) {
           String failureMessage = ("Appointment must begin and end outside of any existing appointment time."
                         + String.format("\n\nExisting Appointment: \nStart: %s \nEnd: %s", currentStart, currentEnd));
-//              + String.format("\n\nExisting Appointment: \nStart: %s \nEnd: %s", DateUtility.convertLocalDateTimeToSystemDefaultZDT(currentStart), DateUtility.convertLocalDateTimeToSystemDefaultZDT(currentEnd)));
 
           AlertUtility.displayErrorAlert("Invalid Appointment Time", failureMessage);
           return false;

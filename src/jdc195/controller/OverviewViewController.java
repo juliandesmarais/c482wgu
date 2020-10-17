@@ -3,6 +3,8 @@ package jdc195.controller;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,7 +19,6 @@ import jdc195.model.Customer;
 import jdc195.support.*;
 import jdc195.support.LaunchViewUtility.View;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -52,11 +53,8 @@ public class OverviewViewController implements Initializable {
   @FXML private TableColumn<Appointment, String> appointmentsLastUpdateByCol;
 
   private static AppointmentsTableDataFilter appointmentsTableDataFilter = AppointmentsTableDataFilter.ALL;
-  private static List<Appointment> appointmentsData;
 
   @Override public void initialize(URL location, ResourceBundle resources) {
-    appointmentsData = null;
-
     setupCustomerTable();
     refreshCustomerTableView();
 
@@ -68,17 +66,19 @@ public class OverviewViewController implements Initializable {
   private void setAppointmentCalendarElementLabels() {
     final String appointmentCalendarDefaultText = "Appointment Calendar";
     final String appointmentCalendarFilterEnabledText = " √ Appointment Calendar";
+    final String appointmentsTitleDefault = "Appointments";
 
     switch (appointmentsTableDataFilter) {
     case ALL:
+      appointmentsTableTitleLabel.setText(appointmentsTitleDefault);
       appointmentCalendarButton.setText(appointmentCalendarDefaultText);
       break;
     case CURRENT_MONTH:
-      appointmentsTableTitleLabel.setText("Appointments (Current Month)");
+      appointmentsTableTitleLabel.setText(appointmentsTitleDefault + " (Current Month)");
       appointmentCalendarButton.setText(appointmentCalendarFilterEnabledText);
       break;
     case CURRENT_WEEK:
-      appointmentsTableTitleLabel.setText("Appointments (Current Week)");
+      appointmentsTableTitleLabel.setText(appointmentsTitleDefault + " (Current Week)");
       appointmentCalendarButton.setText(appointmentCalendarFilterEnabledText);
       break;
     }
@@ -95,6 +95,7 @@ public class OverviewViewController implements Initializable {
   //region Action Handlers
   public void handleLogOutAction(ActionEvent event) {
     if (AlertUtility.displayConfirmationAlert("Log Out", "Are you sure you want to log out?")) {
+      appointmentsTableDataFilter = AppointmentsTableDataFilter.ALL;
       UserManager.getInstance().resetUser();
       new LaunchViewUtility().launchView(event, View.LOGIN);
     }
@@ -112,16 +113,6 @@ public class OverviewViewController implements Initializable {
         allButtons,
         true);
 
-    if (appointmentsData == null) {
-      try {
-        appointmentsData = Appointment.getAppointmentsTableData(AppointmentsTableDataFilter.ALL);
-      } catch (SQLException e) {
-        AlertUtility.displayErrorAlert("Error", "An error occurred when retrieving appointment data.");
-        e.printStackTrace();
-        return;
-      }
-    }
-
     if (resultText.contains(appointmentTypesReport)) {
       showAppointmentTypesReport(event);
     } else if (resultText.contains(userAppointmentsReport)) {
@@ -135,7 +126,7 @@ public class OverviewViewController implements Initializable {
     System.out.println("Displaying report: Appointment types this month.");
     String headerText = String.format("Appointment Types This Month (%s)", DateUtility.getCurrentMonth());
 
-    Map<String, Long> map = appointmentsData.stream().collect(groupingBy(Appointment::getType, counting()));
+    Map<String, Long> map = appointmentsTableView.getItems().stream().collect(groupingBy(Appointment::getType, counting()));
 
     StringBuilder actualMap = new StringBuilder();
     map.forEach((k, v) -> {
@@ -152,7 +143,7 @@ public class OverviewViewController implements Initializable {
     System.out.println("Displaying report: Appointments for current consultant (user).");
     String headerText = "Appointments for Current Consultant";
 
-    Map<Integer, Long> map = appointmentsData.stream().collect(groupingBy(Appointment::getUserId, counting()));
+    Map<Integer, Long> map = appointmentsTableView.getItems().stream().collect(groupingBy(Appointment::getUserId, counting()));
 
     StringBuilder actualMap = new StringBuilder();
     map.forEach((k, v) -> {
@@ -172,7 +163,7 @@ public class OverviewViewController implements Initializable {
     String headerText = String.format("Customers With Appointments This Month (%s)", DateUtility.getCurrentMonth());
 
     StringBuilder actualMap = new StringBuilder();
-    Map<Integer, Long> map = appointmentsData.stream().collect(groupingBy(Appointment::getCustomerId, counting()));
+    Map<Integer, Long> map = appointmentsTableView.getItems().stream().collect(groupingBy(Appointment::getCustomerId, counting()));
     map.forEach((k, v) -> {
       try {
         actualMap.append("Customer Name: ").append(Customer.getCustomerNameWithId(k));
@@ -296,8 +287,8 @@ public class OverviewViewController implements Initializable {
     try {
       appointmentsTableView.setItems(Appointment.getAppointmentsTableData(appointmentsTableDataFilter));
     } catch (SQLException e) {
+      AlertUtility.displayErrorAlert("Error", "An error occurred when retrieving appointment data.");
       e.printStackTrace();
-
     }
   }
   //endregion Appointments Table

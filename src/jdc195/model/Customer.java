@@ -97,14 +97,6 @@ public class Customer extends Queryable {
     return this;
   }
 
-  @Override protected LinkedHashMap<Columns, Object> getColumnsWithValuesWithoutUserData() {
-    LinkedHashMap<Columns, Object> columnsWithValues = new LinkedHashMap<>();
-    columnsWithValues.put(Columns.CUSTOMER_NAME, this.customerName);
-    columnsWithValues.put(Columns.ADDRESS_ID, this.addressId);
-    columnsWithValues.put(Columns.ACTIVE, this.active);
-    return columnsWithValues;
-  }
-
   private static ObservableList<Customer> getCustomersWithResultSet(ResultSet resultSet) throws SQLException {
     ObservableList<Customer> customers = FXCollections.observableArrayList();
 
@@ -126,19 +118,6 @@ public class Customer extends Queryable {
     return getCustomersWithResultSet(new Customer().selectAll());
   }
 
-  @Override public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-    Customer customer = (Customer) o;
-    return customerId.equals(customer.customerId) && customerName.equals(customer.customerName) && addressId.equals(customer.addressId) && active.equals(customer.active);
-  }
-
-  @Override public int hashCode() {
-    return Objects.hash(customerId, customerName, addressId, active, createdBy, lastUpdateBy);
-  }
-
   public static ResultSet getResultsWithCustomerId(int customerId) throws SQLException {
     return QueryUtility.executeSelectIncludingQuery(Tables.CUSTOMER, new Pair<>(Columns.CUSTOMER_ID, customerId));
   }
@@ -153,4 +132,26 @@ public class Customer extends Queryable {
     List<Customer> matchingCustomers = getCustomersWithResultSet(getResultsWithCustomerId(customerId));
     return matchingCustomers.size() > 0 ? matchingCustomers.get(0).getCustomerName() : "";
   }
+
+  @Override protected LinkedHashMap<Columns, Object> getColumnsWithValuesWithoutUserData() {
+    LinkedHashMap<Columns, Object> columnsWithValues = new LinkedHashMap<>();
+    columnsWithValues.put(Columns.CUSTOMER_NAME, this.customerName);
+    columnsWithValues.put(Columns.ADDRESS_ID, this.addressId);
+    columnsWithValues.put(Columns.ACTIVE, this.active);
+    return columnsWithValues;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Customer customer = (Customer) o;
+    return customerId.equals(customer.customerId) && customerName.equals(customer.customerName) && addressId.equals(customer.addressId) && active.equals(customer.active);
+  }
+
+  @Override public int hashCode() {
+    return Objects.hash(customerId, customerName, addressId, active, createdBy, lastUpdateBy);
+  }
+
 }

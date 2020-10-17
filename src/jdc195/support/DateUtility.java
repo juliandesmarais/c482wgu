@@ -19,7 +19,6 @@ public class DateUtility {
 
   public static LocalDateTime getCurrentSystemDefaultLocalDateTime() {
     return LocalDateTime.now();
-    //    return convertZonedDateTimeToSystemDefaultLDT(getCurrentZonedDateTimeInUTC());
   }
 
   /**

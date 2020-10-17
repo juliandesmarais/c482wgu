@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox minWidth="1150" minHeight="675" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.LoginViewController" styleClass="root">
+<VBox minWidth="1275" minHeight="675" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="jdc195.controller.LoginViewController" styleClass="root">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
