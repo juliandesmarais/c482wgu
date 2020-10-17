@@ -12,6 +12,28 @@ import java.util.Optional;
 public class DialogUtility {
 
   /**
+   * Display a basic Dialog window with specified content node, a back button, and a close button. Returns true if the user clicks the back button.
+   * @param sourceEvent The source action event.
+   * @param contentNode The node to display as the content.
+   * @return True if the user clicks the back button, false otherwise.
+   */
+  public static boolean displayBasicDialog(ActionEvent sourceEvent, Node contentNode) {
+    Dialog<String> dialog = new Dialog<>();
+    dialog.getDialogPane().setContent(contentNode);
+    dialog.getDialogPane().getButtonTypes().add(new ButtonType("Back", ButtonBar.ButtonData.BACK_PREVIOUS));
+    dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
+    dialog.initStyle(StageStyle.DECORATED);
+    dialog.initOwner(((Node) sourceEvent.getSource()).getScene().getWindow());
+
+    Optional<String> result = dialog.showAndWait();
+    if (result.isPresent() && !result.toString().isEmpty()) {
+      return result.toString().contains("Back");
+    } else {
+      throw new IllegalStateException(String.format("Failed to retrieve dialog result text successfully. Dialog: %s", dialog.toString()));
+    }
+  }
+
+  /**
    * Display a basic Dialog window with header text, context text, a back button, and a close button. Returns true if the user clicks the back button.
    * @param sourceEvent The source action event.
    * @param headerText The text to display as the header.

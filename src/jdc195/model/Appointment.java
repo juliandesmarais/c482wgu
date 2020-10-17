@@ -172,6 +172,10 @@ public class Appointment extends Queryable {
     return this;
   }
 
+  public static ResultSet selectAll() throws SQLException {
+    return QueryUtility.executeSelectAllQuery(Tables.APPOINTMENT);
+  }
+
   @Override protected LinkedHashMap<Columns, Object> getColumnsWithValuesWithoutUserData() {
     LinkedHashMap<Columns, Object> columnsWithValues = new LinkedHashMap<>();
     columnsWithValues.put(Columns.APPOINTMENT_ID, this.appointmentId);
@@ -193,7 +197,7 @@ public class Appointment extends Queryable {
   }
 
   public static ObservableList<Appointment> getAppointmentsTableData(AppointmentsTableDataFilter filter) throws SQLException {
-    ResultSet resultSet = new Appointment().selectAll();
+    ResultSet resultSet = Appointment.selectAll();
 
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
@@ -239,7 +243,7 @@ public class Appointment extends Queryable {
   }
 
   public static void checkLoginTimeWithinAppointmentWindow() throws SQLException {
-    ResultSet allAppointments = new Appointment().selectAll();
+    ResultSet allAppointments = Appointment.selectAll();
     LocalDateTime currentTime = DateUtility.getCurrentZonedDateTimeInUTC().toLocalDateTime();
 
     while (allAppointments.next()) {
@@ -333,5 +337,9 @@ public class Appointment extends Queryable {
 
   @Override public int hashCode() {
     return Objects.hash(appointmentId, customerId, userId, title, description, location, contact, type, url, start, end);
+  }
+
+  @Override public String toString() {
+    return "Appointment: " + "appointmentId=" + appointmentId + ", customerId=" + customerId + ", userId=" + userId + ", title='" + title + '\'' + ", description='" + description + '\'' + ", location='" + location + '\'' + ", contact='" + contact + '\'' + ", type='" + type + '\'' + ", url='" + url + '\'' + ", start=" + start + ", end=" + end;
   }
 }

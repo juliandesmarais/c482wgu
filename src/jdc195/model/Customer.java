@@ -97,6 +97,10 @@ public class Customer extends Queryable {
     return this;
   }
 
+  public static ResultSet selectAll() throws SQLException {
+    return QueryUtility.executeSelectAllQuery(Tables.CUSTOMER);
+  }
+
   private static ObservableList<Customer> getCustomersWithResultSet(ResultSet resultSet) throws SQLException {
     ObservableList<Customer> customers = FXCollections.observableArrayList();
 
@@ -115,7 +119,7 @@ public class Customer extends Queryable {
   }
 
   public static ObservableList<Customer> getCustomersTableData() throws SQLException {
-    return getCustomersWithResultSet(new Customer().selectAll());
+    return getCustomersWithResultSet(Customer.selectAll());
   }
 
   public static ResultSet getResultsWithCustomerId(int customerId) throws SQLException {

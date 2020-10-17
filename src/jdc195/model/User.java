@@ -1,5 +1,7 @@
 package jdc195.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import jdc195.database.ConnectionManager;
 import jdc195.database.QueryConstants.*;
@@ -8,7 +10,9 @@ import jdc195.database.QueryUtility;
 import java.sql.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class User extends Queryable {
 
@@ -94,6 +98,35 @@ public class User extends Queryable {
     return this;
   }
 
+  public static List<User> getAllUsers() {
+    try {
+      return getUsersWithResultSet(selectAll());
+    } catch (SQLException e) {
+      return new ArrayList<>();
+    }
+  }
+
+  public static ResultSet selectAll() throws SQLException {
+    return QueryUtility.executeSelectAllQuery(Tables.USER);
+  }
+
+  private static List<User> getUsersWithResultSet(ResultSet resultSet) throws SQLException {
+    List<User> users = new ArrayList<>();
+
+    while (resultSet.next()) {
+      users.add(new User()
+          .setActive(resultSet.getBoolean(Columns.ACTIVE.getColumnName()))
+          .setUserId(resultSet.getInt(Columns.USER_ID.getColumnName()))
+          .setUserName(resultSet.getString(Columns.USER_NAME.getColumnName()))
+          .setCreateDate(resultSet.getTimestamp(Columns.CREATE_DATE.getColumnName()).toInstant().atZone(ZoneId.of("UTC")))
+          .setCreatedBy(resultSet.getString(Columns.CREATED_BY.getColumnName()))
+          .setLastUpdate(resultSet.getTimestamp(Columns.LAST_UPDATE.getColumnName()).toInstant().atZone(ZoneId.of("UTC")))
+          .setLastUpdateBy(resultSet.getString(Columns.LAST_UPDATE_BY.getColumnName())));
+    }
+
+    return users;
+  }
+
   public static User getUserWithCredentials(String userName, String password) {
     User foundUser = null;
 
@@ -137,7 +170,16 @@ public class User extends Queryable {
     return stringBuilder.toString();
   }
 
-  public static ResultSet getResultsWithUserId(int userId) throws SQLException {
-    return QueryUtility.executeSelectIncludingQuery(Tables.USER, new Pair<>(Columns.USER_ID, userId));
+  public static User getUserWithUserName(String userName) {
+    try {
+      List<User> foundUsers = getUsersWithResultSet(QueryUtility.executeSelectIncludingQuery(Tables.USER, new Pair<>(Columns.USER_NAME, userName)));
+      if (foundUsers != null && foundUsers.size() > 0) {
+        return foundUsers.get(0);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 }

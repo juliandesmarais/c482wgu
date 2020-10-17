@@ -45,10 +45,6 @@ public abstract class Queryable {
     return QueryUtility.executeInsertIntoQuery(table, getUserDataColumnsWithValues());
   }
 
-  public ResultSet selectAll() throws SQLException {
-    return QueryUtility.executeSelectAllQuery(table);
-  }
-
   public ResultSet getCurrentRecordResults() throws SQLException {
     return QueryUtility.executeSelectIncludingQuery(table, getColumnsWithValuesWithoutUserData());
   }

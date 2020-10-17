@@ -3,12 +3,12 @@ package jdc195.controller;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import jdc195.database.QueryConstants.Columns;
 import jdc195.database.QueryConstants.Tables;
@@ -16,6 +16,7 @@ import jdc195.database.QueryUtility;
 import jdc195.model.Appointment;
 import jdc195.model.Appointment.AppointmentsTableDataFilter;
 import jdc195.model.Customer;
+import jdc195.model.User;
 import jdc195.support.*;
 import jdc195.support.LaunchViewUtility.View;
 
@@ -103,7 +104,7 @@ public class OverviewViewController implements Initializable {
 
   public void handleGenerateReportsAction(ActionEvent event) {
     final String appointmentTypesReport = "Appointment Types This Month";
-    final String userAppointmentsReport = "Appointments for Current Consultant";
+    final String userAppointmentsReport = "Appointments for Consultant";
     final String customersWithAppointmentsReport = "Customers with Appointments This Month";
     final String[] allButtons = new String[] { appointmentTypesReport, userAppointmentsReport, customersWithAppointmentsReport };
 
@@ -140,20 +141,45 @@ public class OverviewViewController implements Initializable {
   }
 
   private void showUserAppointmentsReport(ActionEvent sourceEvent) {
+    List<User> allUsers = new User().getAllUsers();
+
+    VBox contentBox = new VBox();
+    contentBox.setPrefWidth(1300);
+    contentBox.setPrefHeight(250);
+
     System.out.println("Displaying report: Appointments for current consultant (user).");
-    String headerText = "Appointments for Current Consultant";
 
-    Map<Integer, Long> map = appointmentsTableView.getItems().stream().collect(groupingBy(Appointment::getUserId, counting()));
+    Label headerTextLabel = new Label("View Appointments for Consultant: ");
+    ComboBox<String> userSelectionBox = new ComboBox<>();
+    for (User user: allUsers) {
+      userSelectionBox.getItems().add(user.getUserName());
+    }
 
-    StringBuilder actualMap = new StringBuilder();
-    map.forEach((k, v) -> {
-      if (k.equals(UserManager.getInstance().getUser().getUserId())) {
-        actualMap.append("Current Consultant: ").append(UserManager.getInstance().getUser().getUserName()).append("\n");
-        actualMap.append("Appointment Count: ").append(v).append("\n");
+    HBox headerBox = new HBox();
+    headerBox.getChildren().add(headerTextLabel);
+    headerBox.getChildren().add(userSelectionBox);
+
+    Label appointmentListLabel = new Label();
+    ScrollPane scrollPane = new ScrollPane(appointmentListLabel);
+    scrollPane.setPrefWidth(contentBox.getPrefWidth());
+    scrollPane.setPrefHeight(contentBox.getPrefHeight());
+
+    contentBox.getChildren().add(headerBox);
+    contentBox.getChildren().add(scrollPane);
+
+    userSelectionBox.setOnAction(c -> {
+      String selectedUserName = userSelectionBox.getSelectionModel().getSelectedItem();
+      List<Appointment> matchingAppointments = appointmentsTableView.getItems().filtered(u -> u.getUserId().equals(User.getUserWithUserName(selectedUserName).getUserId()));
+
+      StringBuilder output = new StringBuilder();
+      for (Appointment appointment : matchingAppointments) {
+        output.append(appointment.toString()).append("\n");
       }
+
+      appointmentListLabel.setText(output.toString());
     });
 
-    if (DialogUtility.displayBasicDialog(sourceEvent, headerText, actualMap.toString())) {
+    if (DialogUtility.displayBasicDialog(sourceEvent, contentBox)) {
       handleGenerateReportsAction(sourceEvent);
     }
   }
