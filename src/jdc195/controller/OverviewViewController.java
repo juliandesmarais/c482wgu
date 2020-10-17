@@ -21,6 +21,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.util.stream.Collectors.counting;
@@ -275,16 +276,18 @@ public class OverviewViewController implements Initializable {
       return new SimpleStringProperty(customerName);
     });
 
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy h:mm a");
+
     appointmentsTitleCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTitle()));
     appointmentsDescriptionCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDescription()));
     appointmentsLocationCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocation()));
     appointmentsContactCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getContact()));
     appointmentsTypeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
     appointmentsUrlCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUrl()));
-    appointmentsStartDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStart().toLocalDateTime().toString()));
-    appointmentsEndDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEnd().toLocalDateTime().toString()));
-    appointmentsCreatedDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCreateDate().toLocalDateTime().toString()));
-    appointmentsLastUpdateDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLastUpdate().toLocalDateTime().toString()));
+    appointmentsStartDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStart().toLocalDateTime().format(dateFormatter)));
+    appointmentsEndDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEnd().toLocalDateTime().format(dateFormatter)));
+    appointmentsCreatedDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCreateDate().toLocalDateTime().format(dateFormatter)));
+    appointmentsLastUpdateDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLastUpdate().toLocalDateTime().format(dateFormatter)));
     appointmentsCreatedByCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCreatedBy()));
     appointmentsLastUpdateByCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLastUpdateBy()));
   }
