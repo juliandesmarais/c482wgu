@@ -6,9 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import jdc195.database.QueryConstants.Columns;
 import jdc195.database.QueryConstants.Tables;
@@ -16,16 +14,17 @@ import jdc195.database.QueryUtility;
 import jdc195.model.Appointment;
 import jdc195.model.Appointment.AppointmentsTableDataFilter;
 import jdc195.model.Customer;
-import jdc195.support.AlertUtility;
-import jdc195.support.LaunchViewUtility;
+import jdc195.support.*;
 import jdc195.support.LaunchViewUtility.View;
-import jdc195.support.UserManager;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 public class OverviewViewController implements Initializable {
 
@@ -52,8 +51,11 @@ public class OverviewViewController implements Initializable {
   @FXML private TableColumn<Appointment, String> appointmentsLastUpdateByCol;
 
   private static AppointmentsTableDataFilter appointmentsTableDataFilter = AppointmentsTableDataFilter.ALL;
+  private static List<Appointment> appointmentsData;
 
   @Override public void initialize(URL location, ResourceBundle resources) {
+    appointmentsData = null;
+
     setupCustomerTable();
     refreshCustomerTableView();
 
@@ -98,7 +100,91 @@ public class OverviewViewController implements Initializable {
   }
 
   public void handleGenerateReportsAction(ActionEvent event) {
+    final String appointmentTypesReport = "Appointment Types This Month";
+    final String userAppointmentsReport = "Appointments for Current Consultant";
+    final String customersWithAppointmentsReport = "Customers with Appointments This Month";
+    final String[] allButtons = new String[] { appointmentTypesReport, userAppointmentsReport, customersWithAppointmentsReport };
 
+    String resultText = DialogUtility.displayDialog(event,
+        "Generate Report",
+        "Please select which report type you would like to generate.\n\n",
+        allButtons,
+        true);
+
+    if (appointmentsData == null) {
+      try {
+        appointmentsData = Appointment.getAppointmentsTableData(AppointmentsTableDataFilter.ALL);
+      } catch (SQLException e) {
+        AlertUtility.displayErrorAlert("Error", "An error occurred when retrieving appointment data.");
+        e.printStackTrace();
+        return;
+      }
+    }
+
+    if (resultText.contains(appointmentTypesReport)) {
+      showAppointmentTypesReport(event);
+    } else if (resultText.contains(userAppointmentsReport)) {
+      showUserAppointmentsReport(event);
+    } else if (resultText.contains(customersWithAppointmentsReport)) {
+      showCustomersWithAppointmentsReport(event);
+    }
+  }
+
+  private void showAppointmentTypesReport(ActionEvent sourceEvent) {
+    System.out.println("Displaying report: Appointment types this month.");
+    String headerText = String.format("Appointment Types This Month (%s)", DateUtility.getCurrentMonth());
+
+    Map<String, Long> map = appointmentsData.stream().collect(groupingBy(Appointment::getType, counting()));
+
+    StringBuilder actualMap = new StringBuilder();
+    map.forEach((k, v) -> {
+      actualMap.append("Type: ").append(k);
+      actualMap.append("  |  Count: ").append(v).append("\n");
+    });
+
+    if (DialogUtility.displayBasicDialog(sourceEvent, headerText, actualMap.toString())) {
+      handleGenerateReportsAction(sourceEvent);
+    }
+  }
+
+  private void showUserAppointmentsReport(ActionEvent sourceEvent) {
+    System.out.println("Displaying report: Appointments for current consultant (user).");
+    String headerText = "Appointments for Current Consultant";
+
+    Map<Integer, Long> map = appointmentsData.stream().collect(groupingBy(Appointment::getUserId, counting()));
+
+    StringBuilder actualMap = new StringBuilder();
+    map.forEach((k, v) -> {
+      if (k.equals(UserManager.getInstance().getUser().getUserId())) {
+        actualMap.append("Current Consultant Info: \n").append(UserManager.getInstance().getUser().toString()).append("\n");
+        actualMap.append("Appointment Count: ").append(v).append("\n");
+      }
+    });
+
+    if (DialogUtility.displayBasicDialog(sourceEvent, headerText, actualMap.toString())) {
+      handleGenerateReportsAction(sourceEvent);
+    }
+  }
+
+  private void showCustomersWithAppointmentsReport(ActionEvent sourceEvent) {
+    System.out.println("Displaying report: Customers with appointments this month.");
+    String headerText = String.format("Customers With Appointments This Month (%s)", DateUtility.getCurrentMonth());
+
+    StringBuilder actualMap = new StringBuilder();
+    Map<Integer, Long> map = appointmentsData.stream().collect(groupingBy(Appointment::getCustomerId, counting()));
+    map.forEach((k, v) -> {
+      try {
+        actualMap.append("Customer Name: ").append(Customer.getCustomerNameWithId(k));
+        actualMap.append("  |  Appointments: ").append(v);
+      } catch (SQLException e) {
+        AlertUtility.displayErrorAlert("Error", "An error occurred when retrieving customer data.");
+        e.printStackTrace();
+      }
+    });
+
+    if (DialogUtility.displayBasicDialog(sourceEvent, headerText, actualMap.toString())) {
+      handleGenerateReportsAction(sourceEvent);
+    }
   }
 
   public void handleAddCustomerAction(ActionEvent event) {
@@ -148,37 +234,29 @@ public class OverviewViewController implements Initializable {
     final String currentWeekOption = "Current Week";
     final String currentMonthOption = "Current Month";
     final String allOption = "All";
+    final String[] allButtons = new String[] { currentWeekOption, currentMonthOption, allOption };
 
-    Dialog<String> dialog = new Dialog<>();
-    dialog.getDialogPane().setHeaderText("Filter Appointments");
-    dialog.getDialogPane().setContentText("Select which appointments you would like to see on the appointments list.");
-    ButtonType currentWeek = new ButtonType(currentWeekOption, ButtonBar.ButtonData.HELP);
-    ButtonType currentMonth = new ButtonType(currentMonthOption, ButtonBar.ButtonData.HELP);
-    ButtonType all = new ButtonType(allOption, ButtonBar.ButtonData.HELP);
-    ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-    dialog.getDialogPane().getButtonTypes().addAll(cancel, all, currentMonth, currentWeek);
-    dialog.initStyle(StageStyle.DECORATED);
-    dialog.initOwner(((Node) event.getSource()).getScene().getWindow());
+    String resultText = DialogUtility.displayDialog(event,
+        "Filter Appointments",
+        "Please select which appointments you would like to see on the appointments list.\n\n",
+        allButtons,
+        true);
 
-    Optional<String> result = dialog.showAndWait();
-    if (result.isPresent()) {
-      String resultText = result.toString();
-      if (resultText.contains(currentWeekOption)) {
-        appointmentsTableDataFilter = AppointmentsTableDataFilter.CURRENT_WEEK;
-        System.out.println("Displaying appointments by current week.");
-      } else if (resultText.contains(currentMonthOption)) {
-        appointmentsTableDataFilter = AppointmentsTableDataFilter.CURRENT_MONTH;
-        System.out.println("Displaying appointments by current month.");
-      } else if (resultText.contains(allOption)) {
-        appointmentsTableDataFilter = AppointmentsTableDataFilter.ALL;
-        System.out.println("Displaying all appointments.");
-      }
+    if (resultText.contains(currentWeekOption)) {
+      appointmentsTableDataFilter = AppointmentsTableDataFilter.CURRENT_WEEK;
+      System.out.println("Displaying appointments by current week.");
+    } else if (resultText.contains(currentMonthOption)) {
+      appointmentsTableDataFilter = AppointmentsTableDataFilter.CURRENT_MONTH;
+      System.out.println("Displaying appointments by current month.");
+    } else if (resultText.contains(allOption)) {
+      appointmentsTableDataFilter = AppointmentsTableDataFilter.ALL;
+      System.out.println("Displaying all appointments.");
+    }
 
-      setAppointmentCalendarElementLabels();
+    setAppointmentCalendarElementLabels();
 
-      if (!resultText.contains("Cancel")) {
-        refreshAppointmentsTableView();
-      }
+    if (!resultText.contains("Cancel")) {
+      refreshAppointmentsTableView();
     }
   }
   //endregion Action Handlers

@@ -1,6 +1,7 @@
 package jdc195.support;
 
 import java.time.*;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
@@ -39,6 +40,10 @@ public class DateUtility {
   public static int getWeekOfYearFromLocalDateTime(LocalDateTime localDateTime) {
     TemporalField weekOfYear = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
     return localDateTime.get(weekOfYear);
+  }
+
+  public static String getCurrentMonth() {
+    return getCurrentSystemDefaultLocalDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
   }
 
 }

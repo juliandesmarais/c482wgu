@@ -129,6 +129,14 @@ public class User extends Queryable {
     return columnsWithValues;
   }
 
+  @Override public String toString() {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("User ID: ").append(userId).append("\n")
+        .append("User Name: ").append(userName).append("\n")
+        .append("Active: ").append(active ? "Yes" : "No");
+    return stringBuilder.toString();
+  }
+
   public static ResultSet getResultsWithUserId(int userId) throws SQLException {
     return QueryUtility.executeSelectIncludingQuery(Tables.USER, new Pair<>(Columns.USER_ID, userId));
   }
